@@ -2,7 +2,7 @@
 # Tpref: L. delicata 2020
 ########
 ## Packages
-pacman::p_load(brms,bayesplot,lme4,tidyverse, latex2exp, ggforce, cowplot)
+pacman::p_load(brms,bayesplot,lme4,tidyverse, latex2exp, performance, ggforce, cowplot)
 
 ## Data
 # bring in data and arrange for analysis
@@ -12,119 +12,62 @@ Tpref.data.raw <- read.csv("./Final.Analysis.Data/Tpref_datasheet_2020.csv") %>%
   mutate(temp = gsub("[AC]-", "", trt),
          treat = gsub("-.*", "", trt)) 
   
-## residual function - used to check residuals for all models
-residuals_brms <- function(model, data){
-  fitted <- predict(model)[1:dim(data)[1], 1] # Predict mean for each data
-  e <- with(data, mean_temp) - fitted
-  return(e)
-}
-
 
 ####################
-# Model 1 & checks(lags, residuals, r2, summary)
+# Model 1 
 ####################
-model1 <- brms::brm(mean_temp ~ 1 , data = Tpref.data.raw, family = gaussian(), chains = 4, iter = 5000, thin = 5, warmup = 1000, cores = 4)
-model1 <- add_criterion(model1, c("waic", "loo"))
-# Checks and plots
-m1.draws <- as.array(model1)
-mcmc_acf(m1.draws,  pars = c("b_Intercept"), lags =10)
-plot(model1)
-# Residuals
-resid.1 <- residuals_brms(model1, Tpref.data.raw)
-hist(resid.1)
-# R2 and summary of full model
-bayes_R2(model1)
-summary(model1)
-# save model
+model1 <- lm(mean_temp ~ 1 , data = Tpref.data.raw)
+m1.summary <- summary(model1) 
 saveRDS(model1, "./Final.Models/Tpref_models/Tpref.m1.rds")
 
+
 ####################
-# Model 2 & checks(lags, r2, summary)
+# Model 2 & checks
 ####################
-model2 <- brms::brm(mean_temp ~ sex, data = Tpref.data.raw, family = gaussian(), chains = 4, iter = 5000, thin = 5, warmup = 1000, cores = 4)
-model2 <- add_criterion(model2, c("waic", "loo"))
+model2 <- lm(mean_temp ~ sex, data = Tpref.data.raw)
 # Checks and plots
-m2.draws <- as.array(model2)
-mcmc_acf(m2.draws,  pars = c("b_sexm"), lags =10)
-plot(model2)
-# Residuals
-resid.2 <- residuals_brms(model2, Tpref.data.raw)
-hist(resid.2)
-# R2 and summary of full model
-bayes_R2(model2)
-summary(model2)
+m2.summary <- summary(model2) 
+check_model(model2)
 # save model
 saveRDS(model2, "./Final.Models/Tpref_models/Tpref.m2.rds")
 
 ####################
-# Model 3 & checks(lags, residuals, r2, summary)
+# Model 3 & checks
 ####################
-model3 <- brms::brm(mean_temp ~ scale(body_size) + sex, data = Tpref.data.raw, family = gaussian(), chains = 4, iter = 5000, thin = 5, warmup = 1000, cores = 4)
-model3 <- add_criterion(model3, c("waic", "loo"))
+model3 <- lm(mean_temp ~ scale(body_size) + sex, data = Tpref.data.raw)
 # Checks and plots
-m3.draws <- as.array(model3)
-mcmc_acf(m3.draws,  pars = c("b_Intercept","b_sexm", "b_scalebody_size"), lags =10)
-plot(model3)
-# Residuals
-resid.3 <- residuals_brms(model3, Tpref.data.raw)
-hist(resid.3)
-# R2 and summary of full model
-bayes_R2(model3)
-summary(model3)
+m3.summary <- summary(model3) 
+check_model(model3)
 # save model
 saveRDS(model3, "./Final.Models/Tpref_models/Tpref.m3.rds")
 
 ####################
-# Model 4 & checks(lags, residuals, r2, summary)
+# Model 4 & checks
 ####################
-model4 <- brms::brm(mean_temp ~ scale(body_size) + sex +  temp , data = Tpref.data.raw, family = gaussian(), chains = 4, iter = 5000, thin = 5, warmup = 1000, cores = 4)
-model4 <- add_criterion(model4, c("waic", "loo"))
+model4 <- lm(mean_temp ~ scale(body_size) + sex +  temp, data = Tpref.data.raw)
 # Checks and plots
-m4.draws <- as.array(model4)
-mcmc_acf(m4.draws,  pars = c("b_Intercept","b_sexm", "b_scalebody_size", "b_temp28"), lags =10)
-plot(model4)
-# Residuals
-resid.4 <- residuals_brms(model4, Tpref.data.raw)
-hist(resid.4)
-# R2 and summary of full model
-bayes_R2(model4)
-summary(model4)
+m4.summary <- summary(model4) 
+check_model(model4)
 # save model
 saveRDS(model4, "./Final.Models/Tpref_models/Tpref.m4.rds")
 
 ####################
-# Model 5 & checks(lags, residuals, r2, summary)
+# Model 5 & checks
 ####################
-model5 <- brms::brm(mean_temp ~ scale(body_size) + sex +  treat , data = Tpref.data.raw, family = gaussian(), chains = 4, iter = 5000, thin = 5, warmup = 1000, cores = 4)
-model5 <- add_criterion(model5, c("waic", "loo"))
+model5 <- lm(mean_temp ~ scale(body_size) + sex +  treat, data = Tpref.data.raw)
 # Checks and plots
-m5.draws <- as.array(model5)
-mcmc_acf(m5.draws,  pars = c("b_Intercept","b_sexm", "b_scalebody_size", "b_treatC"), lags =10)
-plot(model5)
-# Residuals
-resid.5 <- residuals_brms(model5, Tpref.data.raw)
-hist(resid.5)
-# R2 and summary of full model
-bayes_R2(model5)
-summary(model5)
+m5.summary <- summary(model5) 
+check_model(model5)
 # save model
 saveRDS(model5, "./Final.Models/Tpref_models/Tpref.m5.rds")
 
 ####################
-# Model 6 & checks(lags, r2, summary)
+# Model 6 & checks
 ####################
-model6 <- brms::brm(mean_temp ~ scale(body_size) + sex + temp + treat + temp:treat, data = Tpref.data.raw, family = gaussian(), chains = 4, iter = 5000, thin = 5, warmup = 1000, cores = 4)
-model6 <- add_criterion(model6, c("waic", "loo"))
+model6 <- lm(mean_temp ~ scale(body_size) + sex + temp + treat + temp:treat, data = Tpref.data.raw)
 # Checks and plots
-m6.draws <- as.array(model6)
-mcmc_acf(m6.draws,  pars = c("b_Intercept","b_sexm", "b_scalebody_size", "b_temp28","b_treatC", "b_temp28:treatC"), lags =10)
-plot(model6)
-# Residuals
-resid.6 <- residuals_brms(model6, Tpref.data.raw)
-hist(resid.6)
-# R2 and summary of full model
-bayes_R2(model6)
-summary(model6)
+m6.summary <- summary(model6) 
+check_model(model6)
 # save model
 saveRDS(model6, "./Final.Models/Tpref_models/Tpref.m6.rds")
 
