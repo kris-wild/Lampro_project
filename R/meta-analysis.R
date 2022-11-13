@@ -61,6 +61,17 @@ model_all_rand<-rma.mv(ARR~1,
 orchaRd::i2_ml(model_all_rand) #  phylogeny explains virtually no variance, so we can remove it. 
 saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.rds")
 
+# Drop phylogeny and just check if species is important. Basically the same so keep species in.
+model_all_rand_spp<-rma.mv(ARR~1, 
+                       V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
+                       method="REML",
+                       test="t",
+                       dfs="contain",
+                       random=list(~1|study_ID, 
+                                   ~1|genus_species,
+                                   ~1|obs),# Consider related_temps / related_individuals
+                       data=data)
+
 # 2) Intercept model: without phylogeny
 int_model<-rma.mv(ARR~1, 
                   V=Var_ARR,
@@ -68,19 +79,22 @@ int_model<-rma.mv(ARR~1,
                   test="t",
                   dfs="contain",
                   random=list(~1|study_ID, 
+                              ~1|genus_species,
                               ~1|obs),# Consider related_temps / related_individuals
                   data=data)
 saveRDS(int_model, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.no.phylo.rds")
 # model checks Intercept model
 summary(int_model)     
 i2_ml(int_model) # Lots of heterogeneity
+predict(int_model) # Prediction intervals
 
 # 3) Trait model: Trait differences
 model_trait<- rma.mv(ARR~trait-1, 
                      V=Var_ARR,                     method="REML",
                      test="t",
                      dfs="contain",
-                     random=list(~1|study_ID, 
+                     random=list(~1|study_ID,
+                                 ~1|genus_species,
                                  ~1|obs),# Consider related_temps / related_individuals
                      data=data)
 saveRDS(model_trait, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.trait.rds")
@@ -94,7 +108,8 @@ model_species<- rma.mv(ARR~genus_species-1,
                        method="REML",
                        test="t",
                        dfs="contain",
-                       random=list(~1|study_ID, 
+                       random=list(~1|study_ID,
+                                   ~1|genus_species,
                                    ~1|obs),# Consider related_temps / related_individuals
                        data=data)
 saveRDS(model_species, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.spp.rds")
@@ -109,6 +124,7 @@ model_age<- rma.mv(ARR~age-1,
                    test="t",
                    dfs="contain",
                    random=list(~1|study_ID, 
+                               ~1|genus_species,
                                ~1|obs),# Consider related_temps / related_individuals
                    data=data)
 saveRDS(model_age, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.age.rds")
@@ -129,6 +145,7 @@ model_zone<- rma.mv(ARR~zone-1,
                     method="REML",
                     test="t",
                     dfs="contain",random=list(~1|study_ID, 
+                                              ~1|genus_species,
                                               ~1|obs),# Consider related_temps / related_individuals
                     data=data)
 saveRDS(model_zone, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.zone.rds")
@@ -149,6 +166,7 @@ model_taxon<- rma.mv(ARR~class-1,
                      test="t",
                      dfs="contain",
                      random=list(~1|study_ID, 
+                                 ~1|genus_species,
                                  ~1|obs),# Consider related_temps / related_individuals
                      data=data)
 saveRDS(model_taxon, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.taxon.rds")
@@ -167,6 +185,7 @@ i2_ml(model_taxon)
 Taxon_fig_data <- data %>% filter(class != "tuatara")
 fig_model_taxon <- rma.mv(ARR~class-1,  V=Var_ARR,method="REML",test="t",dfs="contain",
                      random=list(~1|study_ID, 
+                                 ~1|genus_species,
                                  ~1|obs),# Consider related_temps / related_individuals
                      data=Taxon_fig_data)
 Taxon_plot <- orchard_plot(fig_model_taxon, group = "study_ID", mod="class", xlab="dARR", 
