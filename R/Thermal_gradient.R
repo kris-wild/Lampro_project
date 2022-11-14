@@ -2,7 +2,7 @@
 # Tpref: L. delicata 2020
 ########
 ## Packages
-pacman::p_load(brms,bayesplot,lme4,tidyverse, latex2exp, performance, ggforce, cowplot)
+pacman::p_load(brms,bayesplot,lme4,tidyverse, latex2exp, performance, plotrix, ggforce, cowplot)
 
 ## Data
 # bring in data and arrange for analysis
@@ -76,12 +76,20 @@ saveRDS(model6, "./Final.Models/Tpref_models/Tpref.m6.rds")
 # Thermal Figures (Tpref & CTmax)
 ########
 # Tpref fig
+Tpref.data.raw.sum <- Tpref.data.raw %>% 
+  group_by(temp, treat) %>% 
+  mutate(grand.mean = mean(mean_temp),
+         se = std.error(mean_temp)) %>% 
+  ungroup()
+
 legend_title <- "Resource Treatment"
-tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat)) +
-  geom_violin(position = position_dodge(width = 0.9)) +
-  geom_violin(trim = FALSE) +
-  geom_sina(alpha=0.65)+
-  scale_fill_manual(values=c("brown2", "gray82"))+
+tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
+  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
+  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
+  geom_boxplot(outlier.colour = NULL, outlier.size=-1, notch = FALSE, color="black", alpha = 0.7, 
+               width = 0.2, position = position_dodge(width = .9)) +
+  geom_beeswarm(priority = "random", dodge.width = .9)+
+  theme_classic() +
   theme_classic() +
   theme(legend.position = "none",
         text=element_text(size=14))+
@@ -99,10 +107,11 @@ CT.data.raw <- read.csv("./Final.Analysis.Data/CTmax_datasheet_2020.csv") %>%
          spp = "delicata")
 # figure
 ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
-  geom_violin(position = position_dodge(width = 0.9)) +
-  geom_violin(trim = FALSE) +
-  geom_sina(alpha=0.65)+
-  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk ablation', 'Control'))+ 
+  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
+  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
+  geom_boxplot(outlier.colour = NULL, outlier.size=-1, notch = FALSE, color="black", alpha = 0.7, 
+               width = 0.2, position = position_dodge(width = .9)) +
+  geom_beeswarm(priority = "random", dodge.width = .9)+
   theme_classic() +
   theme(legend.position = c(.99, .2),
         legend.justification = c("right", "top"),
@@ -118,3 +127,40 @@ ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
 Temp.Figure <- plot_grid(tpref.fig, ctmax.fig, labels = c('A', 'B'))
 # draw_label("Treatment", x=0.5, y=  0, vjust=-0.5, angle= 0)
 
+
+
+
+################################### Second option for figure 1
+
+tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
+  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
+  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
+  stat_summary(fun = mean, position = position_dodge(width = .9), colour = "red") + 
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(width = .9), width = .15) +
+  geom_beeswarm(priority = "random", dodge.width = .9)+
+  theme_classic() +
+  theme(legend.position = "none",
+        text=element_text(size=14))+
+  xlab(bquote(Treatment~temperature~(degree*C)))+
+  ylab(bquote(T[Pref]~(degree*C)))+
+  scale_y_continuous(breaks=seq(18, 38, 2), limits = c(18,38)) 
+
+ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
+  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
+  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
+  stat_summary(fun = mean, position = position_dodge(width = .9), colour = "red") + 
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(width = .9), width = .15) +
+  geom_beeswarm(priority = "random", dodge.width = .9)+
+  theme_classic() +
+  theme(legend.position = c(.99, .2),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+        legend.margin = margin(5, 5, 5, 5),
+        text=element_text(size=14))+
+  xlab(bquote(Treatment~temperature~(degree*C)))+
+  ylab(bquote(CT[Max]~(degree*C)))+
+  scale_y_continuous(breaks=seq(36, 48, 2), limits = c(36,48)) 
+
+
+# Combining both plots
+Temp.Figure <- plot_grid(tpref.fig, ctmax.fig, labels = c('A', 'B'))
