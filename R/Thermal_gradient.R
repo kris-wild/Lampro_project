@@ -88,8 +88,7 @@ tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
   geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
   geom_boxplot(outlier.colour = NULL, outlier.size=-1, notch = FALSE, color="black", alpha = 0.7, 
                width = 0.2, position = position_dodge(width = .9)) +
-  geom_beeswarm(priority = "random", dodge.width = .9)+
-  theme_classic() +
+  geom_sina(alpha=0.4)+
   theme_classic() +
   theme(legend.position = "none",
         text=element_text(size=14))+
@@ -111,7 +110,7 @@ ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
   geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
   geom_boxplot(outlier.colour = NULL, outlier.size=-1, notch = FALSE, color="black", alpha = 0.7, 
                width = 0.2, position = position_dodge(width = .9)) +
-  geom_beeswarm(priority = "random", dodge.width = .9)+
+  geom_sina(alpha=0.4)+
   theme_classic() +
   theme(legend.position = c(.99, .2),
         legend.justification = c("right", "top"),
@@ -137,7 +136,7 @@ tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
   geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
   stat_summary(fun = mean, position = position_dodge(width = .9), colour = "red") + 
   stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(width = .9), width = .15) +
-  geom_beeswarm(priority = "random", dodge.width = .9)+
+  geom_sina(alpha=0.4)+
   theme_classic() +
   theme(legend.position = "none",
         text=element_text(size=14))+
@@ -145,12 +144,12 @@ tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
   ylab(bquote(T[Pref]~(degree*C)))+
   scale_y_continuous(breaks=seq(18, 38, 2), limits = c(18,38)) 
 
-ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
+ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat))+
   scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
-  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
+  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE)+ 
   stat_summary(fun = mean, position = position_dodge(width = .9), colour = "red") + 
   stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(width = .9), width = .15) +
-  geom_beeswarm(priority = "random", dodge.width = .9)+
+    geom_sina(alpha=0.4)+
   theme_classic() +
   theme(legend.position = c(.99, .2),
         legend.justification = c("right", "top"),
@@ -164,3 +163,5 @@ ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
 
 # Combining both plots
 Temp.Figure <- plot_grid(tpref.fig, ctmax.fig, labels = c('A', 'B'))
+Temp.Figure
+
