@@ -2,7 +2,7 @@
 # Tpref: L. delicata 2020
 ########
 ## Packages
-pacman::p_load(brms,bayesplot,lme4,tidyverse, latex2exp, performance, plotrix, ggforce, cowplot)
+pacman::p_load(brms,bayesplot,lme4,tidyverse, latex2exp, performance, plotrix, ggforce, cowplot, emmeans, ggpubr, data.table)
 
 ## Data
 # bring in data and arrange for analysis
@@ -75,26 +75,50 @@ saveRDS(model6, "./Final.Models/Tpref_models/Tpref.m6.rds")
 ########
 # Thermal Figures (Tpref & CTmax)
 ########
-# Tpref fig
-Tpref.data.raw.sum <- Tpref.data.raw %>% 
-  group_by(temp, treat) %>% 
-  mutate(grand.mean = mean(mean_temp),
-         se = std.error(mean_temp)) %>% 
-  ungroup()
+# Tpref - bring in data
+Tpref.data.raw <- read.csv("./Final.Analysis.Data/Tpref_datasheet_2020.csv") %>%
+  select(c("lane_number","bd_liz_id","toeClip","sex",
+           "mating_encl_ID",	"body_size", "trt","mean_temp")) %>% 
+  mutate(temp = gsub("[AC]-", "", trt),
+         treat = gsub("-.*", "", trt)) 
+Tpref.data.raw$treat<- as.factor(Tpref.data.raw$treat)
+Tpref.data.raw$temp<- as.factor(Tpref.data.raw$temp)
+# Tpref- model for plot
+m_tpref <- lm(mean_temp ~ scale(body_size) + sex + temp + treat + temp:treat, data = Tpref.data.raw)
+m_tpref_emm <- emmeans(m_tpref, specs = c("temp", "treat")) %>% 
+  summary() %>%
+  data.table()
+# Tpref - within treatment comparison for ggplot
+Tpref.within.stat.test <- Tpref.data.raw %>% group_by(temp) %>% 
+  emmeans_test(mean_temp ~treat, conf.level = 0.95) %>% 
+  add_xy_position(x = "temp", dodge = 0.8) %>% 
+  mutate(p = round(Tpref.within.stat.test$p, digits = 2))
+# Tpref - across treatment comparison for ggplot
+Tpref.across.stat.test <- Tpref.data.raw %>% 
+  emmeans_test(mean_temp ~temp, conf.level = 0.95) %>% 
+  add_xy_position(x = "temp", dodge = 0.8) %>% 
+  mutate(p = round(Tpref.across.stat.test$p, digits = 2))
 
-legend_title <- "Resource Treatment"
-tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
-  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
-  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
-  geom_boxplot(outlier.colour = NULL, outlier.size=-1, notch = FALSE, color="black", alpha = 0.7, 
-               width = 0.2, position = position_dodge(width = .9)) +
-  geom_sina(alpha=0.4)+
-  theme_classic() +
+# Tpref - figure
+pd = position_dodge(.8) 
+Tpref_fig <-ggplot(m_tpref_emm, aes(x = temp,y= emmean,color = treat)) +
+  geom_point(shape = 19, size  = 4, position = pd) +
+  geom_errorbar(aes(ymin  = lower.CL,
+                    ymax  = upper.CL),
+                width = 0.2,
+                size  = 0.7,
+                position = pd)+
+  scale_color_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+
+  stat_pvalue_manual(Tpref.within.stat.test, label = "p.adj", tip.length = 0.02, 
+                     step.increase = 0.05,y.position = 34.5, bracket.shorten = 0.01 )+
+  stat_pvalue_manual(Tpref.across.stat.test, label = "p.adj", tip.length = 0.02, 
+                     step.increase = 0.05,y.position = 36.5)+
+  theme_classic()+
   theme(legend.position = "none",
         text=element_text(size=14))+
   xlab(bquote(Treatment~temperature~(degree*C)))+
   ylab(bquote(T[Pref]~(degree*C)))+
-  scale_y_continuous(breaks=seq(18, 38, 2), limits = c(18,38)) 
+  scale_y_continuous(breaks=seq(18, 38, 2), limits = c(18,38), expand = expansion(mult = c(0, 0.1))) 
 
 
 # CTMax (need to bring in data)
@@ -104,14 +128,39 @@ CT.data.raw <- read.csv("./Final.Analysis.Data/CTmax_datasheet_2020.csv") %>%
          age_class = "Juv",
          year = "2020",
          spp = "delicata")
-# figure
-ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
-  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
-  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
-  geom_boxplot(outlier.colour = NULL, outlier.size=-1, notch = FALSE, color="black", alpha = 0.7, 
-               width = 0.2, position = position_dodge(width = .9)) +
-  geom_sina(alpha=0.4)+
-  theme_classic() +
+
+CT.data.raw$treat<- as.factor(CT.data.raw$treat)
+CT.data.raw$temp<- as.factor(CT.data.raw$temp)
+# CTMax- model for plot
+m_CTmax <- lm(CTmax ~ scale(mass) + sex + temp + treat + temp:treat, data = CT.data.raw)
+m_CTmax_emm <- emmeans(m_CTmax, specs = c("temp", "treat")) %>% 
+  summary() %>%
+  data.table()
+# CTMax - within treatment comparison for ggplot
+CTmax.within.stat.test <- CT.data.raw %>% group_by(temp) %>% 
+  emmeans_test(CTmax ~treat, conf.level = 0.95) %>% 
+  add_xy_position(x = "temp", dodge = 0.8) %>% 
+  mutate(p = round(CTmax.within.stat.test$p, digits = 2))
+# CTMax - across treatment comparison for ggplot
+CTmax.across.stat.test <- CT.data.raw %>% 
+  emmeans_test(CTmax ~temp, conf.level = 0.95) %>% 
+  add_xy_position(x = "temp", dodge = 0.8) %>% 
+  mutate(p = round(CTmax.across.stat.test$p, digits = 2))
+
+# CTMax Figure
+CTmax_fig <- ggplot(m_CTmax_emm, aes(x = temp,y= emmean,color = treat)) +
+  geom_point(shape = 19, size  = 4, position = pd) +
+  geom_errorbar(aes(ymin  = lower.CL,
+                    ymax  = upper.CL),
+                width = 0.2,
+                size  = 0.7,
+                position = pd)+
+  scale_color_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+
+  stat_pvalue_manual(CTmax.within.stat.test, label = "p", tip.length = 0.02, 
+                     y.position = 45.5, bracket.shorten = 0.01 )+
+  stat_pvalue_manual(CTmax.across.stat.test, label = "p", 
+                     tip.length = 0.02,y.position = 46.5)+
+  theme_classic()+
   theme(legend.position = c(.99, .2),
         legend.justification = c("right", "top"),
         legend.box.just = "right",
@@ -123,45 +172,8 @@ ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat)) +
 
 
 # Combining both plots
-Temp.Figure <- plot_grid(tpref.fig, ctmax.fig, labels = c('A', 'B'))
+Temp.Figure <- plot_grid(Tpref_fig, CTmax_fig, labels = c('A', 'B'))
 # draw_label("Treatment", x=0.5, y=  0, vjust=-0.5, angle= 0)
 
 
-
-
-################################### Second option for figure 1
-
-tpref.fig <- ggplot(Tpref.data.raw, aes(x = temp, y = mean_temp, fill = treat))+
-  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
-  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE) +
-  stat_summary(fun = mean, position = position_dodge(width = .9), colour = "red") + 
-  stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(width = .9), width = .15) +
-  geom_sina(alpha=0.4)+
-  theme_classic() +
-  theme(legend.position = "none",
-        text=element_text(size=14))+
-  xlab(bquote(Treatment~temperature~(degree*C)))+
-  ylab(bquote(T[Pref]~(degree*C)))+
-  scale_y_continuous(breaks=seq(18, 38, 2), limits = c(18,38)) 
-
-ctmax.fig <- ggplot(CT.data.raw, aes(x = temp, y = CTmax, fill = treat))+
-  scale_fill_manual(legend_title, values=c("brown2", "gray82"), labels=c('Yolk removal', 'Control'))+ 
-  geom_violin(alpha=0.4, position = position_dodge(width = .9),size=1, color="black", trim = FALSE)+ 
-  stat_summary(fun = mean, position = position_dodge(width = .9), colour = "red") + 
-  stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(width = .9), width = .15) +
-    geom_sina(alpha=0.4)+
-  theme_classic() +
-  theme(legend.position = c(.99, .2),
-        legend.justification = c("right", "top"),
-        legend.box.just = "right",
-        legend.margin = margin(5, 5, 5, 5),
-        text=element_text(size=14))+
-  xlab(bquote(Treatment~temperature~(degree*C)))+
-  ylab(bquote(CT[Max]~(degree*C)))+
-  scale_y_continuous(breaks=seq(36, 48, 2), limits = c(36,48)) 
-
-
-# Combining both plots
-Temp.Figure <- plot_grid(tpref.fig, ctmax.fig, labels = c('A', 'B'))
-Temp.Figure
 
