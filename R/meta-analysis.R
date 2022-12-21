@@ -3,7 +3,7 @@
 ########
 ## Packages
 # Load libraries
-pacman::p_load(devtools, tidyverse, metafor, patchwork, R.rsp, emmeans, ggdist, rotl, ape, orchaRd, patchwork, latex2exp, cowplot)
+pacman::p_load(devtools, tidyverse, dplyr, metafor, patchwork, R.rsp, emmeans, ggdist, rotl, ape, orchaRd, patchwork, latex2exp, cowplot)
 
 ## data
 # bring in data and arrange for analysis
@@ -150,7 +150,7 @@ model_zone<- rma.mv(ARR~zone-1,
                     data=data)
 saveRDS(model_zone, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.zone.rds")
 summary(model_zone)
-LatLong_plot <-orchard_plot(model_zone, group = "study_ID", mod="zone", xlab="dARR", data = data, legend.pos = "none") +
+LatLong_plot <-orchard_plot(model_zone, group = "study_ID", mod="zone", xlab="ARR", data = data, legend.pos = "none") +
   scale_fill_manual(values = c("deepskyblue2","firebrick"))+ 
   scale_color_manual(values = c("deepskyblue2","firebrick"))+
   theme_classic() + 
@@ -188,7 +188,7 @@ fig_model_taxon <- rma.mv(ARR~class-1,  V=Var_ARR,method="REML",test="t",dfs="co
                                  ~1|genus_species,
                                  ~1|obs),# Consider related_temps / related_individuals
                      data=Taxon_fig_data)
-Taxon_plot <- orchard_plot(fig_model_taxon, group = "study_ID", mod="class", xlab="dARR", 
+Taxon_plot <- orchard_plot(fig_model_taxon, group = "study_ID", mod="class", xlab="ARR", 
                            data = Taxon_fig_data, legend.pos = "bottom.right") +  
   scale_fill_manual(values = c("cornsilk4", "darkgoldenrod1","darkgreen"))+ 
   scale_color_manual(values = c("cornsilk4", "darkgoldenrod1","darkgreen"))+
@@ -226,7 +226,7 @@ Fig1 <- plot_grid(left_col, right_col)
 Fig1  
 
 # Figure S2 - metanalysis by species
-Fig.S2 <- orchard_plot(model_species, group = "study_ID", mod="genus_species", xlab="dARR", data = data) + 
+Fig.S2 <- orchard_plot(model_species, group = "study_ID", mod="genus_species", xlab="AAR", data = data) + 
   theme(axis.text.y = element_text(angle = 35),
         text = element_text(size = 12))  
 
