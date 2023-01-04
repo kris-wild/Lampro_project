@@ -16,7 +16,7 @@ options(digits = 2)
 rm(list=ls())
 sessionInfo()
 # Packages
-pacman::p_load("dplyr", "MASS", "brms", "bayestestR", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "ggeffects", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "sjPlot", "kableExtra","flextable", "orchaRd", "ggplot2")
+pacman::p_load("dplyr", "MASS", "brms", "bayestestR", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "ggeffects", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "sjPlot", "kableExtra","flextable", "orchaRd", "ggplot2", "metafor")
 ```
 # Results
 ```{r TprefCTmaxResults, echo = FALSE, include = FALSE}
@@ -54,13 +54,21 @@ CTmax.Range <- CT.data.raw %>%
 ```{r MetaAnalysisResults, echo = FALSE, include = FALSE}
 # overall mod
 model_all_rand <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.no.phylo.rds")
-I2_all <- as.data.frame(round(i2_ml(model_all_rand),digits = 3))
+I2_all <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
+I2_all_predict <- as.data.frame(predict(model_all_rand))
+I2_all_predict <- round(I2_all_predict, digits = 2)
 # spp mod
 spp_mod <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.spp.rds")
-I2_spp <- as.data.frame(round(i2_ml(spp_mod),digits = 3))
+I2_spp <- as.data.frame(round(i2_ml(spp_mod),digits = 2))
+mod_bias <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mod_bias.rds")
+mod_bias_b <- as.data.frame(mod_bias$b)
+mod_bias_lb <-as.data.frame(mod_bias$ci.lb)
+mod_bias_ub <-as.data.frame(mod_bias$ci.ub)
+mod_bias_pvalue <- as.data.frame(mod_bias$pval)
 ```
 *(b)	Meta-analysis of early thermal effects on thermal physiology in reptiles*
-<p>Accounting for n = 69 measured effects measured across 13 reptile species, developmental temperatures did not influence thermal traits (T$_{pref}$ or CT$_{max}$) in reptiles overall (HPD: Fig. 2A). When investigating moderators, we found that thermal traits were not influenced across life stage or latitude (Fig. 2B|C). When analysing each reptilian taxonomic group separately, there was no variation in thermal traits for lizards, tortoise, tuataras, and turtles. However, there were a significant increase in thermal traits in snakes (Fig 2D). Heterogeneity in the data was high ($I^2_{Total}$ = `r I2_all[1,1]`%), with species effects ($I^2_{Species}$ = `r I2_spp[1,1]`%) driving the majority of heterogeneity. Upon investigating species specific responses only *Chelydra serpentina* and *Nerodia sipedon* were the only species with significant thermal trait responses to incubation temperatures (Fig. S2). Under higher developmental temperatures, thermal traits in *C. serpentina* decline by 7% while thermal traits in *N. sipedon* increase by 20%. We found no evidence for publication bias (Fig S3; *for details see electronic supplementary materials*).<p>
+<p>Across reptiles, developmental temperatures did not influence thermal traits (T$_{pref}$ or CT$_{max}$), but heterogeneity was high (ARR =`r I2_all_predict[5,1]`-, 95% CI:`r I2_all_predict[1,3]`-`r I2_all_predict[1,4]` ; $I^2_{Total}$ = `r I2_all[1,1]`%, Prediction Interval:`r I2_all_predict[1,5]`-`r I2_all_predict[1,6]`; Fig. 2A, n = 69 effects from 13 species).Thermal traits were not influenced by life stage or latitude (Fig. 2B|C). When analysing each reptilian taxonomic group separately, there was no variation in thermal traits for lizards, tortoises, tuataras, and turtles. However, there was a significant increase in thermal traits in snakes (Fig 2D). Species effects ($I^2_{Species}$ = `r I2_spp[1,1]`%)) drive most of the heterogeneity, with two species Chelydra serpentina and Nerodia sipedon exhibiting significant thermal physiological responses to incubation temperatures (Fig. S2). Under higher developmental temperatures, thermal traits in *Chelydra serpentina* decline by 7% while thermal traits in *Nerodia sipedon* increase by 20%. We found no evidence for publication biases ($\beta$=`r mod_bias_b[2,1]`, 95%CI=`r mod_bias_lb[2,1]`-`r mod_bias_ub[2,1]`, *p=`r mod_bias_pvalue[2,1]`*; Fig S3; *for details see electronic supplementary materials*).
+<p>
 
 \newpage
 # Tables & Figures
