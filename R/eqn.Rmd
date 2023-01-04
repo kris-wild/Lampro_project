@@ -16,7 +16,7 @@ options(digits = 2)
 rm(list=ls())
 sessionInfo()
 # Packages
-pacman::p_load("dplyr", "MASS", "brms", "bayestestR", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "ggeffects", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "sjPlot", "kableExtra","flextable", "orchaRd", "ggplot2", "metafor")
+pacman::p_load("dplyr", "MASS", "brms", "bayestestR", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "ggeffects", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "sjPlot", "kableExtra","flextable", "orchaRd", "ggplot2", "metafor", "broom")
 ```
 # Results
 ```{r TprefCTmaxResults, echo = FALSE, include = FALSE}
@@ -77,86 +77,92 @@ Table 1. Model outputs coefficients for testing wither sex, body mass, incubatio
 ################ Tpref
 # Tabulate the model coefficients
 #null mod
-Tpref_m1 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m1.rds")
-Tpref_m1_table <- lazerhawk::brms_SummaryTable(Tpref_m1)
+Tpref_m1_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m1.rds") %>% 
+  tidy(conf.int = TRUE)
 # M2 = sex
-Tpref_m2 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m2.rds")
-Tpref_m2_table <- lazerhawk::brms_SummaryTable(Tpref_m2) %>% 
-  filter(Covariate == "sexm") 
+Tpref_m2_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m2.rds") %>%
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "sexm") 
 Tpref_m2_table[1,1] <- "Sex"
 # M3 = body mass
-Tpref_m3 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m3.rds")
-Tpref_m3_table <- lazerhawk::brms_SummaryTable(Tpref_m3) %>% 
-  filter(Covariate == "scalebody_size") 
+Tpref_m3_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m3.rds") %>% 
+  tidy(conf.int = TRUE)%>% 
+  filter(term == "scale(body_size)") 
 Tpref_m3_table[1,1] <- "Body Mass"
 # M4 = Incubation Temperature
-Tpref_m4 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m4.rds")
-Tpref_m4_table <- lazerhawk::brms_SummaryTable(Tpref_m4) %>% 
-  filter(Covariate == "temp28") 
+Tpref_m4_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m4.rds") %>% 
+  tidy(conf.int = TRUE)%>%
+  filter(term == "temp28") 
 Tpref_m4_table[1,1] <- "Incubation Temperature"
 # M5 = Resource
-Tpref_m5 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m5.rds")
-Tpref_m5_table <- lazerhawk::brms_SummaryTable(Tpref_m5) %>% 
-  filter(Covariate == "treatC") 
+Tpref_m5_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m5.rds") %>%
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "treatC") 
 Tpref_m5_table[1,1] <- "Resource"
 # M6 = Resource*Temp interaction
-Tpref_m6 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m6.rds")
-Tpref_m6_table <- lazerhawk::brms_SummaryTable(Tpref_m6) %>% 
-  filter(Covariate == "temp28:treatC") 
+Tpref_m6_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m6.rds") %>% 
+  tidy(conf.int=TRUE) %>% 
+  filter(term == "temp28:treatC") 
 Tpref_m6_table[1,1] <- "Incubation Temperature*Resource"
 
 # arranging Tpref Table
 Tpref.Tbl.comb <- rbind(Tpref_m1_table, Tpref_m2_table, Tpref_m3_table, 
                Tpref_m4_table, Tpref_m5_table, Tpref_m6_table) %>% 
-  dplyr::select(c(-Est.Error)) %>% 
+  dplyr::select(-c("std.error","statistic")) %>% 
   mutate("Thermal Index" = "Tpref")
-Tpref.Tbl.1 <- Tpref.Tbl.comb[,c(5,1,2,3,4)]
+Tpref.Tbl.1 <- Tpref.Tbl.comb[,c(6,1,2,4,5,3)]
 
 ################ CT MAX
 # Tabulate the model coefficients 
 #null mod
-CTmax_m1 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m1.rds")
-CTmax_m1_table <- lazerhawk::brms_SummaryTable(CTmax_m1)
+CTmax_m1_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m1.rds") %>% 
+  tidy(conf.int = TRUE)
 # M2 = sex
-CTmax_m2 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m2.rds")
-CTmax_m2_table <- lazerhawk::brms_SummaryTable(CTmax_m2) %>% 
-  filter(Covariate == "sexm") 
+CTmax_m2_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m2.rds") %>% 
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "sexm") 
 CTmax_m2_table[1,1] <- "Sex"
 # M3 = body mass
-CTmax_m3 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m3.rds")
-CTmax_m3_table <- lazerhawk::brms_SummaryTable(CTmax_m3) %>% 
-  filter(Covariate == "scalemass") 
+CTmax_m3_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m3.rds") %>%
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "scale(mass)") 
 CTmax_m3_table[1,1] <- "Body Mass"
 # M4 = Incubation Temperature
-CTmax_m4 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m4.rds")
-CTmax_m4_table <- lazerhawk::brms_SummaryTable(CTmax_m4) %>% 
-  filter(Covariate == "temp28") 
+CTmax_m4_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m4.rds") %>%
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "temp28") 
 CTmax_m4_table[1,1] <- "Incubation Temperature"
 # m5 = Resource
-CTmax_m5 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m5.rds")
-CTmax_m5_table <- lazerhawk::brms_SummaryTable(CTmax_m5) %>% 
-  filter(Covariate == "treatC") 
+CTmax_m5_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m5.rds") %>% 
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "treatC") 
 CTmax_m5_table[1,1] <- "Resource"
 # m6 = Resource*Temp interaction
-CTmax_m6 <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m6.rds")
-CTmax_m6_table <- lazerhawk::brms_SummaryTable(CTmax_m6) %>% 
-  filter(Covariate == "temp28:treatC") 
+CTmax_m6_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m6.rds") %>%
+  tidy(conf.int = TRUE) %>% 
+  filter(term == "temp28:treatC") 
 CTmax_m6_table[1,1] <- "Incubation Temperature*Resource"
 
 # arranging CTmax Table
 CTmax.Tbl.comb <- rbind(CTmax_m1_table, CTmax_m2_table, CTmax_m3_table, 
                CTmax_m4_table, CTmax_m5_table, CTmax_m6_table) %>% 
-  dplyr::select(-c(Est.Error)) %>% 
+  dplyr::select(-c("std.error","statistic")) %>% 
   mutate("Thermal Index" = "CTmax")
-CTmax.Tbl.1 <- CTmax.Tbl.comb[,c(5,1,2,3,4)]
+CTmax.Tbl.1 <- CTmax.Tbl.comb[,c(6,1,2,4,5,3)]
 
 ############# Final Table 1
-Tbl.1 <- as.data.frame(rbind(Tpref.Tbl.1, CTmax.Tbl.1))
+Tbl.1 <- as.data.frame(rbind(Tpref.Tbl.1, CTmax.Tbl.1)) %>% 
+  rename(Covariate = term,
+         Estimate = estimate,
+         "l-95% CI" = conf.low,
+         "u-95% CI" = conf.high,
+         "p value" = p.value) %>% 
+  mutate_if(is.numeric, round, 2)
 Tbl.1.Final <- flextable(Tbl.1) %>% 
   italic(i = 1:12, j = 1, italic = TRUE) %>% 
-  bold(i = 1, j = 2:5, bold = TRUE, part = "body") %>% 
-  bold(i = 7, j = 2:5, bold = TRUE, part = "body") %>% 
-  hline(i=6, j = 1:5, part="body") %>% 
+  bold(i = 1, j = 2:6, bold = TRUE, part = "body") %>% 
+  bold(i = 7, j = 2:6, bold = TRUE, part = "body") %>% 
+  hline(i=6, j = 1:6, part="body") %>% 
   merge_v(j = "Thermal Index") %>%  
   autofit(part = "all") %>% 
   align(align ="center", part = "all") %>% 
