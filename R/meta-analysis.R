@@ -13,9 +13,12 @@ data$obs <- 1:nrow(data)
 # Calculate effect sizes and check 
 data <- escalc(measure = "ROM", m1=trt_mean, sd1=trt_sd, n1=trt_n, m2=c_mean, sd2=c_sd , n2=c_n, data = data, append = TRUE)
 escalc(measure = "ROM", m1=10, sd1=2, n1=10, m2=5, sd2=2 , n2=10)
-model.bias <- rma.mv(yi ~ 0 + scale(temp_diff, scale=FALSE), random = list(~1|study_ID, ~1| species, ~1|obs), V = vi, data = data)
+
+# Mod bias Check
+model.bias1 <- rma.mv(yi ~ sqrt(vi), random = list(~1|study_ID, ~1| species, ~1|obs), V = vi, data = data)
 # Funnel plot
-funnel( yaxis="seinv", model.bias, legend=FALSE, digit = 2, las = 1)
+funnel( yaxis="seinv", model.bias1, legend=FALSE, digit = 2, las = 1)
+saveRDS(model.bias, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mod_bias.rds")
 
 ### ### ### 
 ### Meta-analysis with acclimation response ratio #### 
@@ -231,6 +234,3 @@ Fig.S2 <- orchard_plot(model_species, group = "study_ID", mod="genus_species", x
         text = element_text(size = 12))  
 
 # Figure S3
-model.bias <- rma.mv(yi ~ 0 + scale(temp_diff, scale=FALSE), random = list(~1|study_ID, ~1| species, ~1|obs), V = vi, data = data)
-# Funnel plot
-funnel( yaxis="seinv", model.bias, legend=FALSE, digit = 2, las = 1))
