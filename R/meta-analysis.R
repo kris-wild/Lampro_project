@@ -26,7 +26,8 @@ saveRDS(model.bias, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mo
 data <- data %>%  mutate(ARR=((trt_mean-c_mean)/(trt_temp-c_temp)),
                          Var_ARR = ((1/(trt_temp-c_temp))^2*(c_sd^2/c_n+trt_sd^2/trt_n)))
 # acclimation response ratio figure
-ggplot(data) + geom_vline(xintercept=0, alpha=0.5, linetype=2)+
+ggplot(data) + 
+  geom_vline(xintercept=0, alpha=0.5, linetype=2)+
   stat_slab(aes(x = ARR, fill_ramp = stat(cut_cdf_qi(cdf, .width = c(0.5,0.8, 0.95), labels = scales::percent_format()))), side = "bottom", scale = 0.5,
             show.legend = F, col = "darkcyan") + 
   stat_dots(aes(x = ARR, col=trait), alpha = 0.8, quantiles = 54,dotsize = 0.8, shape = 16)
@@ -49,7 +50,7 @@ phylo_matrix<-vcv(phylo_tree, cor=T) # generate phylogenetic vcv matrix
 ##### All models & checks #####
 ### ### ### 
 
-# 1) Model ALL: Both Tpref and CTmax analysed together, with all random effects
+# 1) Model ALL with phylo: Both Tpref and CTmax analysed together, with all random effects
 model_all_rand<-rma.mv(ARR~1, 
                        V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
                        method="REML",
@@ -61,7 +62,11 @@ model_all_rand<-rma.mv(ARR~1,
                        R=list(genus_species=phylo_matrix),
                        data=data)
 # check phylogeny  
-orchaRd::i2_ml(model_all_rand) #  phylogeny explains virtually no variance, so we can remove it. 
+orchaRd::i2_ml(model_all_rand) #  phylogeny explains virtually no variance, so we can remove it
+I2_all_phylo <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
+I2_all_phylo
+I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
+I2_all_phylo_predict
 saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.rds")
 
 # Drop phylogeny and just check if species is important. Basically the same so keep species in.
@@ -74,6 +79,9 @@ model_all_rand_spp<-rma.mv(ARR~1,
                                    ~1|genus_species,
                                    ~1|obs),# Consider related_temps / related_individuals
                        data=data)
+summary(model_all_rand_spp)     
+i2_ml(model_all_rand_spp) 
+
 
 # 2) Intercept model: without phylogeny
 int_model<-rma.mv(ARR~1, 
@@ -104,6 +112,9 @@ saveRDS(model_trait, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/m
 summary(model_trait)
 orchard_plot(model_trait, group = "study_ID", mod="trait", xlab="ARR", data = data)
 i2_ml(model_trait)
+I2_model_trait <- as.data.frame(round(i2_ml(model_trait),digits = 2))
+I2_model_trait
+
 
 # 4) Model species: differences between species
 model_species<- rma.mv(ARR~genus_species-1, 
