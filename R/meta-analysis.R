@@ -51,6 +51,29 @@ phylo_matrix<-vcv(phylo_tree, cor=T) # generate phylogenetic vcv matrix
 ### ### ### 
 
 # 1) Model ALL with phylo: Both Tpref and CTmax analysed together, with all random effects
+
+data$spp <- data$genus_species
+
+model_all_rand<-rma.mv(ARR~1, 
+                       V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
+                       method="REML",
+                       test="t",
+                       dfs="contain",
+                       random=list(~1|study_ID, 
+                                   ~1|genus_species, #species name with covaiance matrix
+                                   ~1|spp, # species name
+                                   ~1|obs),# Consider related_temps / related_individuals
+                       R=list(genus_species=phylo_matrix),
+                       data=data)
+# check phylogeny  
+orchaRd::i2_ml(model_all_rand) #  phylogeny explains virtually no variance, so we can remove it
+I2_all_phylo <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
+I2_all_phylo
+I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
+I2_all_phylo_predict
+saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.rds")
+
+
 model_all_rand<-rma.mv(ARR~1, 
                        V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
                        method="REML",
@@ -68,6 +91,8 @@ I2_all_phylo
 I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
 I2_all_phylo_predict
 saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.rds")
+
+
 
 # Drop phylogeny and just check if species is important. Basically the same so keep species in.
 model_all_rand_spp<-rma.mv(ARR~1, 
