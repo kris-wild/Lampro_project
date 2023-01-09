@@ -3,7 +3,7 @@
 ########
 ## Packages
 # Load libraries
-pacman::p_load(devtools, tidyverse, dplyr, metafor, patchwork, R.rsp, emmeans, ggdist, rotl, ape, orchaRd, patchwork, latex2exp, cowplot)
+pacman::p_load(devtools, dplyr, metafor, patchwork, R.rsp, emmeans, ggdist, rotl, ape, orchaRd, patchwork, latex2exp, cowplot, ggplot2)
 
 ## data
 # bring in data and arrange for analysis
@@ -14,11 +14,6 @@ data$obs <- 1:nrow(data)
 data <- escalc(measure = "ROM", m1=trt_mean, sd1=trt_sd, n1=trt_n, m2=c_mean, sd2=c_sd , n2=c_n, data = data, append = TRUE)
 escalc(measure = "ROM", m1=10, sd1=2, n1=10, m2=5, sd2=2 , n2=10)
 
-# Mod bias Check
-model.bias1 <- rma.mv(yi ~ sqrt(vi), random = list(~1|study_ID, ~1| species, ~1|obs), V = vi, data = data)
-# Funnel plot
-funnel( yaxis="seinv", model.bias1, legend=FALSE, digit = 2, las = 1)
-saveRDS(model.bias, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mod_bias.rds")
 
 ### ### ### 
 ### Meta-analysis with acclimation response ratio #### 
@@ -46,12 +41,10 @@ plot(phylo_tree)
 phylo_tree$tip.label<-gsub("_", " ", phylo_tree$tip.label) # remove underscores in species names
 phylo_matrix<-vcv(phylo_tree, cor=T) # generate phylogenetic vcv matrix
 
-### ### ###  
-##### All models & checks #####
-### ### ### 
-
+###################################################  
+##### Phylo, spp, observation - intercept mods
+###################################################  
 # 1) Model ALL with phylo: Both Tpref and CTmax analysed together, with all random effects
-
 data$spp <- data$genus_species
 
 model_all_rand<-rma.mv(ARR~1, 
@@ -71,10 +64,10 @@ I2_all_phylo <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
 I2_all_phylo
 I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
 I2_all_phylo_predict
-saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.rds")
+saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.allrand.rds")
 
-
-model_all_rand<-rma.mv(ARR~1, 
+# 2) model removing species name as random variable but keeping phylo matrix
+model_all_no_spp<-rma.mv(ARR~1, 
                        V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
                        method="REML",
                        test="t",
@@ -84,17 +77,14 @@ model_all_rand<-rma.mv(ARR~1,
                                    ~1|obs),# Consider related_temps / related_individuals
                        R=list(genus_species=phylo_matrix),
                        data=data)
-# check phylogeny  
-orchaRd::i2_ml(model_all_rand) #  phylogeny explains virtually no variance, so we can remove it
-I2_all_phylo <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
-I2_all_phylo
-I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
+# check if spp drives varience
+orchaRd::i2_ml(model_all_no_spp) #  phylogeny explains virtually no variance, so we can remove it
+I2_all_phylo <- as.data.frame(round(i2_ml(model_all_no_spp),digits = 2))
+I2_all_phylo_predict <- as.data.frame(predict(model_all_no_spp))
 I2_all_phylo_predict
-saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.rds")
+saveRDS(model_all_no_spp, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.nospp.rds")
 
-
-
-# Drop phylogeny and just check if species is important. Basically the same so keep species in.
+# 3) Drop phylogeny and just check if species is important. Basically the same so keep species in.
 model_all_rand_spp<-rma.mv(ARR~1, 
                        V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
                        method="REML",
@@ -108,7 +98,10 @@ summary(model_all_rand_spp)
 i2_ml(model_all_rand_spp) 
 
 
-# 2) Intercept model: without phylogeny
+
+#############################################
+# Fig2A) Intercept model: **without phylogeny
+#############################################
 int_model<-rma.mv(ARR~1, 
                   V=Var_ARR,
                   method="REML",
@@ -124,7 +117,9 @@ summary(int_model)
 i2_ml(int_model) # Lots of heterogeneity
 predict(int_model) # Prediction intervals
 
-# 3) Trait model: Trait differences
+###############################
+# Fig2A): Trait differences mod
+###############################
 model_trait<- rma.mv(ARR~trait-1, 
                      V=Var_ARR,                     method="REML",
                      test="t",
@@ -140,23 +135,10 @@ i2_ml(model_trait)
 I2_model_trait <- as.data.frame(round(i2_ml(model_trait),digits = 2))
 I2_model_trait
 
-
-# 4) Model species: differences between species
-model_species<- rma.mv(ARR~genus_species-1, 
-                       V=Var_ARR,
-                       method="REML",
-                       test="t",
-                       dfs="contain",
-                       random=list(~1|study_ID,
-                                   ~1|genus_species,
-                                   ~1|obs),# Consider related_temps / related_individuals
-                       data=data)
-saveRDS(model_species, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.spp.rds")
-summary(model_species)
-orchard_plot(model_species, group = "study_ID", mod="genus_species", xlab="ARR", data = data)
-i2_ml(model_species)
-
-## 5) Life stage - AGE
+#########################
+## Fig2B) Life stage mod
+#########################
+data$age <- factor(data$age, levels=c("adult", "juvenile", "hatchling"))
 model_age<- rma.mv(ARR~age-1, 
                    V=Var_ARR,
                    method="REML",
@@ -177,8 +159,9 @@ Lifestage_plot <- orchard_plot(model_age, group = "study_ID", mod="age", xlab="A
         axis.text.y = element_text(angle = 45))
 i2_ml(model_age)
 
-
-# 6) Latitude 
+####################
+# Fig2C) Latitude mod
+####################
 model_zone<- rma.mv(ARR~zone-1, 
                     V=Var_ARR,
                     method="REML",
@@ -197,8 +180,9 @@ LatLong_plot <-orchard_plot(model_zone, group = "study_ID", mod="zone", xlab="AR
         axis.text.y = element_text(angle = 45))
 i2_ml(model_zone)
 
-
-## 7) taxon
+####################
+## Fig2D) major taxonomic group mod
+####################
 model_taxon<- rma.mv(ARR~class-1, 
                      V=Var_ARR,# Consider using the VCV matrix of ARR with correlated errors
                      method="REML",
@@ -219,7 +203,6 @@ orchard_plot(model_taxon, group = "study_ID", mod="class", xlab="ARR", data = da
         axis.line = element_line(colour = "black"))
 
 i2_ml(model_taxon)
-
 # dropping tuatara for figure purposes
 Taxon_fig_data <- data %>% filter(class != "tuatara")
 fig_model_taxon <- rma.mv(ARR~class-1,  V=Var_ARR,method="REML",test="t",dfs="contain",
@@ -237,8 +220,26 @@ Taxon_plot <- orchard_plot(fig_model_taxon, group = "study_ID", mod="class", xla
         panel.background = element_blank(), 
         axis.line = element_line(colour = "black"))
 
+
+####################
+# Mod bias Check
+####################
+model.bias1 <- rma.mv(ARR ~ sqrt(vi), random = list(~1|study_ID, ~1| species, ~1|obs), V = vi, data = data)
+summary(model.bias1) 
+model.bias2 <- rma.mv(ARR ~ vi, random = list(~1|study_ID, ~1| species, ~1|obs), V = vi, data = data)
+summary(model.bias2)
+
+# Funnel plot
+funnel( yaxis="seinv", model.bias1, legend=FALSE, digit = 2, las = 1)
+saveRDS(model.bias1, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mod_bias.rds")
+
+
+
+
+
+
 ##########
-# Figure
+# Figure2 - FINAL
 ##########
 # Arranging data for CTMax/Tpref and Overall for final figure
 p1 <- mod_results(model_trait, group = "study_ID", mod="1",  data = data)
@@ -264,9 +265,3 @@ right_col <- plot_grid(Taxon_plot, labels = c('D'), label_size = 12)
 Fig1 <- plot_grid(left_col, right_col)  
 Fig1  
 
-# Figure S2 - metanalysis by species
-Fig.S2 <- orchard_plot(model_species, group = "study_ID", mod="genus_species", xlab="AAR", data = data) + 
-  theme(axis.text.y = element_text(angle = 35),
-        text = element_text(size = 12))  
-
-# Figure S3
