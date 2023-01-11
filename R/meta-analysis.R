@@ -10,11 +10,6 @@ pacman::p_load(devtools, dplyr, metafor, patchwork, R.rsp, emmeans, ggdist, rotl
 data <- read.csv("./Final.Analysis.Data/Final_Meta_results_extracted_data.csv")
 data$obs <- 1:nrow(data)
 
-# Calculate effect sizes and check 
-data <- escalc(measure = "ROM", m1=trt_mean, sd1=trt_sd, n1=trt_n, m2=c_mean, sd2=c_sd , n2=c_n, data = data, append = TRUE)
-escalc(measure = "ROM", m1=10, sd1=2, n1=10, m2=5, sd2=2 , n2=10)
-
-
 ### ### ### 
 ### Meta-analysis with acclimation response ratio #### 
 ### ### ### 
@@ -41,6 +36,10 @@ plot(phylo_tree)
 phylo_tree$tip.label<-gsub("_", " ", phylo_tree$tip.label) # remove underscores in species names
 phylo_matrix<-vcv(phylo_tree, cor=T) # generate phylogenetic vcv matrix
 
+## Create VCV matrix for sampling errors, but V is non-positive definite....so that's an issue. We'll use nearpd for now to correct for this as there don't seem to be any major issues in the data, and I dount this will make any real differences
+  data$cluster = with(data, interaction(study_ID, s_cor))
+  V_mat <- metafor::vcalc(vi = Var_ARR, cluster = cluster, nearpd = TRUE, data = data)
+
 ###################################################  
 ##### Phylo, spp, observation - intercept mods
 ###################################################  
@@ -58,6 +57,7 @@ model_all_rand<-rma.mv(ARR~1,
                                    ~1|obs),# Consider related_temps / related_individuals
                        R=list(genus_species=phylo_matrix),
                        data=data)
+
 # check phylogeny  
 orchaRd::i2_ml(model_all_rand) #  phylogeny explains virtually no variance, so we can remove it
 I2_all_phylo <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
@@ -111,6 +111,25 @@ int_model<-rma.mv(ARR~1,
                               ~1|genus_species,
                               ~1|obs),# Consider related_temps / related_individuals
                   data=data)
+
+# Explore incorperating V matrix to deal with correlated sampling errors. Note that this matrix is non-positive definite, so matrix is bent to make PD. Interpret this caustiously. 
+int_model_Vmat<-rma.mv(ARR~1, 
+                  V=V_mat,
+                  method="REML",
+                  test="t",
+                  dfs="contain",
+                  random=list(~1|study_ID, 
+                              ~1|genus_species,
+                              ~1|obs),# Consider related_temps / related_individuals
+                  data=data)
+
+# Check which model is better supported
+AIC(int_model)   # Clear winner
+AIC(int_model_Vmat)
+
+# Model with just sampling variance is probably best to go with, but we can check using RVE if we see any differences ## Lets use RVE to account for non-independence
+int_model_RVE <- robust(int_model, cluster = data$cluster)
+
 saveRDS(int_model, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.no.phylo.rds")
 # model checks Intercept model
 summary(int_model)     
@@ -128,6 +147,10 @@ model_trait<- rma.mv(ARR~trait-1,
                                  ~1|genus_species,
                                  ~1|obs),# Consider related_temps / related_individuals
                      data=data)
+
+## Lets use RVE to account for non-independence
+  model_trait_RVE <- robust(model_trait, cluster = data$cluster)
+
 saveRDS(model_trait, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.trait.rds")
 summary(model_trait)
 orchard_plot(model_trait, group = "study_ID", mod="trait", xlab="ARR", data = data)
@@ -148,6 +171,10 @@ model_age<- rma.mv(ARR~age-1,
                                ~1|genus_species,
                                ~1|obs),# Consider related_temps / related_individuals
                    data=data)
+
+## Lets use RVE to account for non-independence
+  model_age_RVE <- robust(model_age, cluster = data$cluster)
+
 saveRDS(model_age, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.age.rds")
 summary(model_age)
 Lifestage_plot <- orchard_plot(model_age, group = "study_ID", mod="age", xlab="ARR", data = data, legend.pos = "none") + 
@@ -160,7 +187,7 @@ Lifestage_plot <- orchard_plot(model_age, group = "study_ID", mod="age", xlab="A
 i2_ml(model_age)
 
 ####################
-# Fig2C) Latitude mod
+# Fig2C) Temperate vs Tropical mod
 ####################
 model_zone<- rma.mv(ARR~zone-1, 
                     V=Var_ARR,
@@ -170,6 +197,10 @@ model_zone<- rma.mv(ARR~zone-1,
                                               ~1|genus_species,
                                               ~1|obs),# Consider related_temps / related_individuals
                     data=data)
+
+## Lets use RVE to account for non-independence
+  model_zone_RVE <- robust(model_zone, cluster = data$cluster)
+
 saveRDS(model_zone, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.zone.rds")
 summary(model_zone)
 LatLong_plot <-orchard_plot(model_zone, group = "study_ID", mod="zone", xlab="ARR", data = data, legend.pos = "none") +
@@ -192,6 +223,10 @@ model_taxon<- rma.mv(ARR~class-1,
                                  ~1|genus_species,
                                  ~1|obs),# Consider related_temps / related_individuals
                      data=data)
+
+## Lets use RVE to account for non-independence....something wrong with this RV Estimation. Must be a bug in metafor
+  model_taxon_RVE <- robust(model_taxon, cluster = data$cluster)
+
 saveRDS(model_taxon, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.taxon.rds")
 summary(model_taxon)
 # Taxon_plot
