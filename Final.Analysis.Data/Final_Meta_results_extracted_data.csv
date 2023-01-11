@@ -18,25 +18,25 @@ obs_ID,study_ID,author,year,genus,species,trait,unit,c_temp,c_mean,c_sd,c_se,c_n
 7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,26.625,0.61871843,0.218749999,8,24.5,27,0.93280072,0.281249999,11,,,1992 female,3,41.7606,juvenile,turtle,temperate,aquatic,1
 7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,26.625,0.61871843,0.218749999,8,27.5,24.71875,1.6583124,0.500000001,11,,,1992 female,6,41.7606,juvenile,turtle,temperate,aquatic,1
 7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,24.5,27,0.93280072,0.281249999,11,27.5,24.71875,1.6583124,0.500000001,11,,,1992 female,3,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,26.125,0.27063294,0.156250001,3,27.5,25.40625,2.25346955,0.625000001,13,,,1992 male,6,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,26.125,0.27063294,0.156250001,3,30.5,24.09375,1.51554446,0.437500001,12,,,1992 male,9,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,27.5,25.40625,2.25346955,0.625000001,13,30.5,24.09375,1.51554446,0.437500001,12,,,1992 male,3,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.3389831,0.64718248,0.152542373,18,24.5,27.5932203,2.69059455,0.508474576,28,,,1993 female,3,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.3389831,0.64718248,0.152542373,18,27.5,25.3050847,2.79661017,0.559322034,25,,,1993 female,6,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,24.5,27.5932203,2.69059455,0.508474576,28,27.5,25.3050847,2.79661017,0.559322034,25,,,1993 female,3,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.4576271,0.65028224,0.13559322,23,27.5,25.7966102,2.23188871,0.576271187,15,,,1993 male,6,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.4576271,0.65028224,0.13559322,23,30.5,24.6949153,3.11126614,0.610169491,26,,,1993 male,9,41.7606,juvenile,turtle,temperate,aquatic,1
-7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,27.5,25.7966102,2.23188871,0.576271187,15,30.5,24.6949153,3.11126614,0.610169491,26,,,1993 male,3,41.7606,juvenile,turtle,temperate,aquatic,1
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,26.125,0.27063294,0.156250001,3,27.5,25.40625,2.25346955,0.625000001,13,,,1992 male,6,41.7606,juvenile,turtle,temperate,aquatic,2
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,26.125,0.27063294,0.156250001,3,30.5,24.09375,1.51554446,0.437500001,12,,,1992 male,9,41.7606,juvenile,turtle,temperate,aquatic,2
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,27.5,25.40625,2.25346955,0.625000001,13,30.5,24.09375,1.51554446,0.437500001,12,,,1992 male,3,41.7606,juvenile,turtle,temperate,aquatic,2
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.3389831,0.64718248,0.152542373,18,24.5,27.5932203,2.69059455,0.508474576,28,,,1993 female,3,41.7606,juvenile,turtle,temperate,aquatic,3
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.3389831,0.64718248,0.152542373,18,27.5,25.3050847,2.79661017,0.559322034,25,,,1993 female,6,41.7606,juvenile,turtle,temperate,aquatic,3
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,24.5,27.5932203,2.69059455,0.508474576,28,27.5,25.3050847,2.79661017,0.559322034,25,,,1993 female,3,41.7606,juvenile,turtle,temperate,aquatic,3
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.4576271,0.65028224,0.13559322,23,27.5,25.7966102,2.23188871,0.576271187,15,,,1993 male,6,41.7606,juvenile,turtle,temperate,aquatic,4
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,21.5,28.4576271,0.65028224,0.13559322,23,30.5,24.6949153,3.11126614,0.610169491,26,,,1993 male,9,41.7606,juvenile,turtle,temperate,aquatic,4
+7,7,O'steen,1998,Chelydra,serpentina,Tpref,celsius,27.5,25.7966102,2.23188871,0.576271187,15,30.5,24.6949153,3.11126614,0.610169491,26,,,1993 male,3,41.7606,juvenile,turtle,temperate,aquatic,4
 8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,34.1,0.6,0.2,9,29.5,33.8,1.5,0.5,9,,,-150 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,1
 8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,34.1,0.6,0.2,9,31,33.2,0.9,0.3,9,,,-150 kPa,3,19.9,hatchling,lizard,tropical,terrestrial,1
 8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,29.5,33.8,1.5,0.5,9,31,33.2,0.9,0.3,9,,,-150 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,1
-8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,34.1,1.13137085,0.4,8,29.5,33.6,1.264911064,0.4,10,,,-550 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,1
-8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,34.1,1.13137085,0.4,8,31,34.2,0.6,0.2,9,,,-550 kPa,3,19.9,hatchling,lizard,tropical,terrestrial,1
-8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,29.5,33.6,1.264911064,0.4,10,31,34.2,0.6,0.2,9,,,-550 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,1
-8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,33.7,1.697056275,0.6,8,29.5,33.8,1.697056275,0.6,8,,,-1100 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,1
-8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,33.7,1.697056275,0.6,8,31,34.2,2.7,0.9,9,,,-1100 kPa,3,19.9,hatchling,lizard,tropical,terrestrial,1
-8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,29.5,33.8,1.697056275,0.6,8,31,34.2,2.7,0.9,9,,,-1100 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,1
-9,9,Qualls,1999,Sceloporus,virgatus,Tpref,celsius,20,37.07,0.863675286,0.223,15,25,34.73,1.382655055,0.357,15,,,High elevation,5,31.92,hatchling,lizard,temperate,terrestrial,1
+8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,34.1,1.13137085,0.4,8,29.5,33.6,1.264911064,0.4,10,,,-550 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,2
+8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,34.1,1.13137085,0.4,8,31,34.2,0.6,0.2,9,,,-550 kPa,3,19.9,hatchling,lizard,tropical,terrestrial,2
+8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,29.5,33.6,1.264911064,0.4,10,31,34.2,0.6,0.2,9,,,-550 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,2
+8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,33.7,1.697056275,0.6,8,29.5,33.8,1.697056275,0.6,8,,,-1100 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,3
+8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,28,33.7,1.697056275,0.6,8,31,34.2,2.7,0.9,9,,,-1100 kPa,3,19.9,hatchling,lizard,tropical,terrestrial,3
+8,8,Alberts,1997,Cyclura,nubila,Tpref,celsius,29.5,33.8,1.697056275,0.6,8,31,34.2,2.7,0.9,9,,,-1100 kPa,1.5,19.9,hatchling,lizard,tropical,terrestrial,3
+9,9,Qualls,1999,Sceloporus,virgatus,Tpref,celsius,20,37.07,0.863675286,0.223,15,25,34.73,1.382655055,0.357,15,,,High elevation,5,31.92,hatchling,lizard,temperate,terrestrial,0
 9,9,Qualls,1999,Sceloporus,virgatus,Tpref,celsius,20,37.39,1.056417531,0.249,18,25,34.91,1.507109817,0.337,20,,,Low elevation,5,31.92,hatchling,lizard,temperate,terrestrial,1
 10,10,Arnold,1995,Thamnophis,elegans,Tpref,celsius,24,27.1526196,1.14806378,0.213190092,29,26,27.881549,0.9476082,0.113260843,70,,,based on maternal temp,2,40.65,juvenile,snake,temperate,terrestrial,1
 10,10,Arnold,1995,Thamnophis,elegans,Tpref,celsius,24,27.1526196,1.14806378,0.213190092,29,28,27.8997722,0.92938497,0.164293604,32,,,based on maternal temp,4,40.65,juvenile,snake,temperate,terrestrial,1
@@ -53,9 +53,9 @@ obs_ID,study_ID,author,year,genus,species,trait,unit,c_temp,c_mean,c_sd,c_se,c_n
 10,10,Arnold,1995,Thamnophis,elegans,Tpref,celsius,29,28.0637813,1.05694761,0.176157935,36,30,27.2801822,1.07517084,0.147686073,53,,,based on maternal temp,1,40.65,juvenile,snake,temperate,terrestrial,1
 10,10,Arnold,1995,Thamnophis,elegans,Tpref,celsius,29,28.0637813,1.05694761,0.176157935,36,32,27.9362187,0.9476082,0.173008796,30,,,based on maternal temp,3,40.65,juvenile,snake,temperate,terrestrial,1
 10,10,Arnold,1995,Thamnophis,elegans,Tpref,celsius,30,27.2801822,1.07517084,0.147686073,53,32,27.9362187,0.9476082,0.173008796,30,,,based on maternal temp,2,40.65,juvenile,snake,temperate,terrestrial,1
-11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,23,29.0204082,2.32653061,0.447741025,27,27,29.877551,3.71428571,0.830539534,20,,,"<2 days, sd is interquartile range",4,30.07,juvenile,lizard,temperate,terrestrial,1
-11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,23,29.0204082,2.32653061,0.447741025,27,30,28.8979592,2.73469388,0.4760491,33,,,"<2 days, sd is interquartile range",7,30.07,juvenile,lizard,temperate,terrestrial,1
-11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,27,29.877551,3.71428571,0.830539534,20,30,28.8979592,2.73469388,0.4760491,33,,,"<2 days, sd is interquartile range",3,30.07,juvenile,lizard,temperate,terrestrial,1
+11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,23,29.0204082,2.32653061,0.447741025,27,27,29.877551,3.71428571,0.830539534,20,,,"<2 days, sd is interquartile range",4,30.07,juvenile,lizard,temperate,terrestrial,0
+11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,23,29.0204082,2.32653061,0.447741025,27,30,28.8979592,2.73469388,0.4760491,33,,,"<2 days, sd is interquartile range",7,30.07,juvenile,lizard,temperate,terrestrial,0
+11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,27,29.877551,3.71428571,0.830539534,20,30,28.8979592,2.73469388,0.4760491,33,,,"<2 days, sd is interquartile range",3,30.07,juvenile,lizard,temperate,terrestrial,0
 11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,23,30.7755102,2,0.384900179,27,27,30.1632653,2.24489796,0.501974444,20,,,">23 days, sd is interquartile range",4,30.07,juvenile,lizard,temperate,terrestrial,1
 11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,23,30.7755102,2,0.384900179,27,30,31.0204082,2.57142857,0.447628258,33,,,">23 days, sd is interquartile range",7,30.07,juvenile,lizard,temperate,terrestrial,1
 11,11,Goodman,2007,Anolis,carolinensis,Tpref,celsius,27,30.1632653,2.24489796,0.501974444,20,30,31.0204082,2.57142857,0.447628258,33,,,">23 days, sd is interquartile range",3,30.07,juvenile,lizard,temperate,terrestrial,1
