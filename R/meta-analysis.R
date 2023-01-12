@@ -7,7 +7,7 @@ pacman::p_load(devtools, dplyr, metafor, patchwork, R.rsp, emmeans, ggdist, rotl
 
 ## data
 # bring in data and arrange for analysis
-data <- read.csv("./Final.Analysis.Data/Data_matching_Pottier_et_al.csv")
+data <- read.csv("./Final.Analysis.Data/Final_Meta_results_extracted_data.csv")
 
 ### ### ### 
 ### Meta-analysis with acclimation response ratio #### 
