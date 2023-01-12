@@ -154,6 +154,7 @@ orchard_plot(model_trait, group = "study_ID", mod="trait", xlab="ARR", data = da
 i2_ml(model_trait)
 I2_model_trait <- as.data.frame(round(i2_ml(model_trait),digits = 2))
 I2_model_trait
+mod_results(model_trait, mod="trait", group="study_ID", data=data) # Prediction intervals
 
 #########################
 ## Fig2B) Life stage mod
@@ -179,6 +180,7 @@ Lifestage_plot <- orchard_plot(model_age, group = "study_ID", mod="age", xlab="A
         axis.title.x = element_blank(),
         axis.text.y = element_text(angle = 45))
 i2_ml(model_age)
+mod_results(model_age, mod="age", group="study_ID", data=data) # Prediction intervals
 
 ####################
 # Fig2C) Temperate vs Tropical mod
@@ -202,6 +204,7 @@ LatLong_plot <-orchard_plot(model_zone, group = "study_ID", mod="zone", xlab="AR
   theme(legend.position = 'none', 
         axis.text.y = element_text(angle = 45))
 i2_ml(model_zone)
+mod_results(model_zone, mod="zone", group="study_ID", data=data) # Prediction intervals
 
 ####################
 ## Fig2D) major taxonomic group mod
@@ -218,6 +221,8 @@ model_taxon<- rma.mv(ARR~class-1,
 
 saveRDS(model_taxon, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.taxon.rds")
 summary(model_taxon)
+mod_results(model_taxon, mod="class", group="study_ID", data=data) # Prediction intervals
+
 # Taxon_plot
 orchard_plot(model_taxon, group = "study_ID", mod="class", xlab="ARR", data = data, legend.pos = "bottom.right") +  
   theme(axis.text.y = element_text(angle = 45),
