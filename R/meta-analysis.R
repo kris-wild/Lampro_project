@@ -146,7 +146,7 @@ model_trait<- rma.mv(ARR~trait-1,
                      data=data)
 
 ## Lets use RVE to account for non-independence
-  model_trait_RVE <- robust(model_trait, cluster = data$cluster)
+model_trait_RVE <- robust(model_trait, cluster = data$cluster)
 
 saveRDS(model_trait, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.trait.rds")
 summary(model_trait)
@@ -323,6 +323,6 @@ left_col <- plot_grid(Overall,
                       axis = 'l')
 right_col <- plot_grid(Taxon_plot, labels = c('D'), label_size = 12)
 
-Fig1 <- plot_grid(left_col, right_col)  
-Fig1  
+Fig2 <- plot_grid(left_col, right_col)  
+Fig2  
 
