@@ -1,0 +1,49 @@
+﻿Data_file_name,Column_name,Column_discription
+CTmax_datasheet_2020.csv,trial_date,date: dd/mm/yyyy format
+CTmax_datasheet_2020.csv,bd_liz_id,Species and hatchling ID
+CTmax_datasheet_2020.csv,toeClip,Unique toe clip number
+CTmax_datasheet_2020.csv,mating_encl_ID,Enclosure ID
+CTmax_datasheet_2020.csv,mass,mass before trial (g)
+CTmax_datasheet_2020.csv,trt,treatment & incubation temperature: A = ablation or yolk removal; C = Control; 23 incubation temp C; 28 incubation temp in C
+CTmax_datasheet_2020.csv,tube_number,falcon tube number for CT max experiment
+CTmax_datasheet_2020.csv,CTmax,CT max measurment in degree C
+Tpref_datasheet_2020.csv,fasting_date,date: dd/mm/yyyy format of start of fasting 
+Tpref_datasheet_2020.csv,fasting_enclosure,tub number of fasting
+Tpref_datasheet_2020.csv,trial_date,date: dd/mm/yyyy format of tpref trial
+Tpref_datasheet_2020.csv,start_time,start time of trial hh:mm
+Tpref_datasheet_2020.csv,end_time,end time of trial hh:mm
+Tpref_datasheet_2020.csv,lane_number,lane number of thermal gradent
+Tpref_datasheet_2020.csv,bd_liz_id,Species and hatchling ID
+Tpref_datasheet_2020.csv,toeClip,Unique toe clip number
+Tpref_datasheet_2020.csv,sex,Phenotypic sex
+Tpref_datasheet_2020.csv,mating_encl_ID,Enclosure ID
+Tpref_datasheet_2020.csv,mass,mass before trial (g)
+Tpref_datasheet_2020.csv,trt,treatment & incubation temperature: A = ablation or yolk removal; C = Control; 23 incubation temp C; 28 incubation temp in C
+Tpref_datasheet_2020.csv,mean_temp,mean temperature (C)of temperatures recorded from temp_1 - temp_33
+Tpref_datasheet_2020.csv,temp_1-temp_33,trial temperature of thermal gradent - this was averaged above
+Final_Meta_results_extracted_data.csv,obs_ID,observation number used as random varible
+Final_Meta_results_extracted_data.csv,study_ID,id of study - i.e. paper id used for random varible
+Final_Meta_results_extracted_data.csv,shared_trt_ID,this column was used if Treatments re-used; allowed for stepwise comparisons
+Final_Meta_results_extracted_data.csv,cohort_ID,this column was used if animals were remeasured at different time points
+Final_Meta_results_extracted_data.csv,note_ID,"describes how study_id, shared_trt, or cohort_id was determined"
+Final_Meta_results_extracted_data.csv,author,last name of first author
+Final_Meta_results_extracted_data.csv,year,year of publication
+Final_Meta_results_extracted_data.csv,genus,Genus used in publication
+Final_Meta_results_extracted_data.csv,species,Species used in publication
+Final_Meta_results_extracted_data.csv,class,Class of species used in publication
+Final_Meta_results_extracted_data.csv,latitude,Latitude of species found
+Final_Meta_results_extracted_data.csv,zone,Geogrpahic zone (tropical or temperate) of where species is found
+Final_Meta_results_extracted_data.csv,habitat,General habitat descriptor: Aquatic vs terrestrial
+Final_Meta_results_extracted_data.csv,age,"Age of measurment: Hatchling, juvinile, adult"
+Final_Meta_results_extracted_data.csv,trait,Thermal trait being measured: Ctmax or Tpref
+Final_Meta_results_extracted_data.csv,unit,unit of temperature measurment (C) or (F)
+Final_Meta_results_extracted_data.csv,c_temp,Control developmental temperature of study
+Final_Meta_results_extracted_data.csv,c_mean,The mean heat tolerance estimates (CTmax or Tpref) of control individuals 
+Final_Meta_results_extracted_data.csv,c_sd,The standard deviation of heat tolerance estimates (CTmax or Tpref) of control individuals 
+Final_Meta_results_extracted_data.csv,c_se,The standard error of heat tolerance estimates (CTmax or Tpref) of control individuals 
+Final_Meta_results_extracted_data.csv,c_n,The sample size of heat tolerance estimates (CTmax or Tpref) of control individuals 
+Final_Meta_results_extracted_data.csv,trt_temp,Treatment developmental temperature of study
+Final_Meta_results_extracted_data.csv,trt_mean,The mean heat tolerance estimates (CTmax or Tpref) of treatment individuals 
+Final_Meta_results_extracted_data.csv,trt_sd,The standard deviation of heat tolerance estimates (CTmax or Tpref) of treatment individuals 
+Final_Meta_results_extracted_data.csv,trt_se,The standard error of heat tolerance estimates (CTmax or Tpref) of treatment individuals 
+Final_Meta_results_extracted_data.csv,trt_n,The sample size of heat tolerance estimates (CTmax or Tpref) of treatment individuals 
