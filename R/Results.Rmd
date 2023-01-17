@@ -16,7 +16,7 @@ options(digits = 2)
 rm(list=ls())
 sessionInfo()
 # Packages
-pacman::p_load("dplyr", "MASS", "brms", "bayestestR", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "ggeffects", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "sjPlot", "kableExtra","flextable", "orchaRd", "ggplot2", "metafor", "broom")
+pacman::p_load("dplyr", "MASS", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "ggeffects", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "sjPlot", "kableExtra","flextable", "orchaRd", "ggplot2", "metafor", "broom", "plotrix")
 ```
 # Results
 ```{r TprefCTmaxResults, echo = FALSE, include = FALSE}
@@ -33,7 +33,8 @@ Tpref.Range <- Tpref %>%
   summarise(n = n(),
             min = min(Tpref),
             max = max(Tpref), 
-            mean = mean(Tpref)) %>% 
+            mean = mean(Tpref),
+            se = std.error(Tpref)) %>% 
   round(2)
 
 # CTmax
@@ -46,11 +47,12 @@ CT.data.raw <- read.csv("~/Dropbox/Lampro_project/Final.Analysis.Data/CTmax_data
 CTmax.Range <- CT.data.raw %>% 
   summarise(min = min(CTmax),
             max = max(CTmax), 
-            mean = mean(CTmax)) %>% 
+            mean = mean(CTmax),
+            se = std.error(CTmax)) %>% 
   round(2)
 ```
 *(a)Incubation temperature and resource allocation consequences on thermal preference and critical thermal maximum*
-<p>Hatchling *Lampropholis delicata* mean thermal preference (T$_{pref}$) was `r Tpref.Range[1,4]`$^\circ$C and ranged from `r Tpref.Range[1,2]`–`r Tpref.Range[1,3]`$^\circ$C. Mean critical thermal maximum (CT$_{max}$) was `r CTmax.Range[1,3]`$^\circ$C and ranged from `r CTmax.Range[1,1]`–`r CTmax.Range[1,2]`$^\circ$C. We did not detect any effect of incubation temperature, yolk treatment, sex, or body mass on T$_{pref}$ or CT$_{max}$ (Figure 1A|B; Table 1). The WAIC model comparisons further support these findings, where our null model ranked as the most parsimonious over other model combinations for both T$_{pref}$ or CT$_{max}$ (Table S1) <p>
+<p>Hatchling *Lampropholis delicata* (n=40) were measured for thermal preference (T$_{pref}$) and critical thermal maximum,with (n=10) per resource treatment (yolk removal and control) by incubation temperature (23 & 28°C). Mean T$_{pref}$ was `r Tpref.Range[1,4]`$^\circ$C ±SE`r Tpref.Range[1,5]`and ranged from `r Tpref.Range[1,2]`–`r Tpref.Range[1,3]`$^\circ$C. Mean CT$_{max}$ was `r CTmax.Range[1,3]`$^\circ$C ±SE`r CTmax.Range[1,4]` and ranged from `r CTmax.Range[1,1]`–`r CTmax.Range[1,2]`$^\circ$C. We did not detect any effect of incubation temperature, yolk treatment, sex, or body mass on T$_{pref}$ or CT$_{max}$ (Figure 1A|B; Table 1).<p>
 ```{r MetaAnalysisResults, echo = FALSE, include = FALSE}
 # overall mod
 model_all_rand <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.allrand.rds")
@@ -67,7 +69,7 @@ mod_bias_ub <-as.data.frame(mod_bias$ci.ub)
 mod_bias_pvalue <- as.data.frame(mod_bias$pval)
 ```
 *(b)	Meta-analysis of early thermal effects on thermal physiology in reptiles*
-<p>Across reptiles, developmental temperatures did not influence thermal traits (T$_{pref}$ or CT$_{max}$), but heterogeneity was high (ARR =`r I2_all_predict[1,1]`-, 95% CI:`r I2_all_predict[1,3]`-`r I2_all_predict[1,4]` ; $I^2_{Total}$ = `r I2_all[1,1]`%, Prediction Interval:`r I2_all_predict[1,5]`-`r I2_all_predict[1,6]`; Fig. 2A, n = 69 effects from 13 species).Thermal traits were not influenced by life stage or climatic zone  (Fig. 2B|C). When analysing each reptilian taxonomic group separately, there was no variation in thermal traits for lizards, tortoises, tuataras, and turtles. However, there was a significant increase in thermal traits in snakes (Fig 2D). Species effects ($I^2_{Species}$ = `r I2_spp[3,1]`%)) drive most of the heterogeneity, with two species Chelydra serpentina and Nerodia sipedon exhibiting significant thermal physiological responses to incubation temperatures (Fig. S2). Under higher developmental temperatures, thermal traits in *Chelydra serpentina* decline by 7% while thermal traits in *Nerodia sipedon* increase by 20%. We found no evidence for publication biases ($\beta$=`r mod_bias_b[2,1]`, 95%CI=`r mod_bias_lb[2,1]`-`r mod_bias_ub[2,1]`, *p=`r mod_bias_pvalue[2,1]`*; Fig S3; *for details see electronic supplementary materials*).
+<p>Across reptiles, developmental temperatures did not influence thermal traits (T_pref or CT_max), but heterogeneity was high (ARR =`r I2_all_predict[5,1]`-, 95% CI:`r I2_all_predict[1,3]`-`r I2_all_predict[1,4]` ; $I^2_{Total}$ = `r I2_all[1,1]`%, Prediction Interval:`r I2_all_predict[1,5]`-`r I2_all_predict[1,6]`; Fig. 2A, n = 69 effects from 13 species). Species effects ($I^2_{Species}$ = `r I2_spp[3,1]`%) drove most of the heterogeneity in ARR, but thermal traits were not influenced by life stage, climatic zone or major taxonomic group (i.e., snakes, turtles, lizards) (Fig. 2B|C). However, there was a significant increase in thermal traits in snakes, but this was driven by a single species (*Nerodia sipdedon*) (Fig 2D). We found no evidence for publication biases ($\beta$=`r mod_bias_b[2,1]`, 95%CI=`r mod_bias_lb[2,1]`-`r mod_bias_ub[2,1]`, *p=`r mod_bias_pvalue[2,1]`*; Fig S4; for further details see electronic supplementary materials).
 <p>
 
 \newpage

@@ -80,6 +80,7 @@ I2_all_phylo <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
 I2_all_phylo
 I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
 I2_all_phylo_predict
+AIC.rma(model_all_rand)
 saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.allrand.rds")
 
 # 2) model removing species name as random variable but keeping phylo matrix
@@ -98,6 +99,7 @@ orchaRd::i2_ml(model_all_no_spp) #  phylogeny explains virtually no variance, so
 I2_all_phylo <- as.data.frame(round(i2_ml(model_all_no_spp),digits = 2))
 I2_all_phylo_predict <- as.data.frame(predict(model_all_no_spp))
 I2_all_phylo_predict
+AIC.rma(model_all_no_spp)
 saveRDS(model_all_no_spp, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.nospp.rds")
 
 # 3) Drop phylogeny and just check if species is important. Basically the same so keep species in.
@@ -112,7 +114,7 @@ model_all_rand_spp<-rma.mv(ARR~1,
                        data=data)
 summary(model_all_rand_spp)     
 i2_ml(model_all_rand_spp) 
-
+AIC.rma(model_all_rand_spp)
 
 #############################################
 # Fig2A) Intercept model: **without phylogeny
@@ -133,6 +135,7 @@ saveRDS(int_model, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/met
 summary(int_model)     
 i2_ml(int_model) # Lots of heterogeneity
 predict(int_model) # Prediction intervals
+AIC.rma(int_model)
 
 ###############################
 # Fig2A): Trait differences mod
