@@ -68,9 +68,9 @@ model_all_rand<-rma.mv(ARR~1,
                        test="t",
                        dfs="contain",
                        random=list(~1|study_ID, 
-                                   ~1|genus_species, #species name with covaiance matrix
+                                   ~1|genus_species, #species name with covariance matrix
                                    ~1|spp, # species name
-                                   ~1|obs_ID),# Consider related_temps / related_individuals
+                                   ~1|obs_ID),
                        R=list(genus_species=phylo_matrix),
                        data=data)
 
@@ -85,13 +85,13 @@ saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_rati
 
 # 2) model removing species name as random variable but keeping phylo matrix
 model_all_no_spp<-rma.mv(ARR~1, 
-                       V=VCV_ARR,# Consider using the VCV matrix of ARR with correlated errors
+                       V=VCV_ARR,
                        method="REML",
                        test="t",
                        dfs="contain",
                        random=list(~1|study_ID, 
                                    ~1|genus_species,
-                                   ~1|obs_ID),# Consider related_temps / related_individuals
+                                   ~1|obs_ID),
                        R=list(genus_species=phylo_matrix),
                        data=data)
 # check if spp drives varience
@@ -104,13 +104,13 @@ saveRDS(model_all_no_spp, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ra
 
 # 3) Drop phylogeny and just check if species is important. Basically the same so keep species in.
 model_all_rand_spp<-rma.mv(ARR~1, 
-                       V=VCV_ARR,# Consider using the VCV matrix of ARR with correlated errors
+                       V=VCV_ARR,
                        method="REML",
                        test="t",
                        dfs="contain",
                        random=list(~1|study_ID, 
                                    ~1|genus_species,
-                                   ~1|obs_ID),# Consider related_temps / related_individuals
+                                   ~1|obs_ID),
                        data=data)
 summary(model_all_rand_spp)     
 i2_ml(model_all_rand_spp) 
