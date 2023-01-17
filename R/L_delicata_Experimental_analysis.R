@@ -62,7 +62,7 @@ saveRDS(model4, "./Final.Models/CTmax_models/CT.Max.m4.rds")
 ####################
 # Model 5 & checks
 ####################
-model5 <- lm(CTmax ~ scale(mass) + sex + treat, data = CT.data.raw)
+model5 <- lm(CTmax ~ scale(mass) + sex + temp + treat, data = CT.data.raw)
 # Checks and plots
 m5.summary <- summary(model5) 
 check_model(model5)
@@ -88,7 +88,7 @@ saveRDS(model6, "./Final.Models/CTmax_models/CT.Max.m6.rds")
 ## Data
 # bring in data and arrange for analysis
 Tpref.data.raw <- read.csv("./Final.Analysis.Data/Tpref_datasheet_2020.csv") %>%
-  select(c("lane_number","bd_liz_id","toeClip","sex",
+  dplyr::select(c("lane_number","bd_liz_id","toeClip","sex",
            "mating_encl_ID",	"body_size", "trt","mean_temp")) %>% 
   mutate(temp = gsub("[AC]-", "", trt),
          treat = gsub("-.*", "", trt)) 
@@ -135,7 +135,7 @@ saveRDS(model4, "./Final.Models/Tpref_models/Tpref.m4.rds")
 ####################
 # Model 5 & checks
 ####################
-model5 <- lm(mean_temp ~ scale(body_size) + sex +  treat, data = Tpref.data.raw)
+model5 <- lm(mean_temp ~ scale(body_size) + sex +  temp + treat, data = Tpref.data.raw)
 # Checks and plots
 m5.summary <- summary(model5) 
 check_model(model5)
