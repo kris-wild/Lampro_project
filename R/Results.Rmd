@@ -53,12 +53,12 @@ CTmax.Range <- CT.data.raw %>%
 <p>Hatchling *Lampropholis delicata* mean thermal preference (T$_{pref}$) was `r Tpref.Range[1,4]`$^\circ$C and ranged from `r Tpref.Range[1,2]`–`r Tpref.Range[1,3]`$^\circ$C. Mean critical thermal maximum (CT$_{max}$) was `r CTmax.Range[1,3]`$^\circ$C and ranged from `r CTmax.Range[1,1]`–`r CTmax.Range[1,2]`$^\circ$C. We did not detect any effect of incubation temperature, yolk treatment, sex, or body mass on T$_{pref}$ or CT$_{max}$ (Figure 1A|B; Table 1). The WAIC model comparisons further support these findings, where our null model ranked as the most parsimonious over other model combinations for both T$_{pref}$ or CT$_{max}$ (Table S1) <p>
 ```{r MetaAnalysisResults, echo = FALSE, include = FALSE}
 # overall mod
-model_all_rand <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.no.phylo.rds")
+model_all_rand <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.allrand.rds")
 I2_all <- as.data.frame(round(i2_ml(model_all_rand),digits = 2))
 I2_all_predict <- as.data.frame(predict(model_all_rand))
 I2_all_predict <- round(I2_all_predict, digits = 2)
 # spp mod
-spp_mod <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.spp.rds")
+spp_mod <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.no.phylo.rds")
 I2_spp <- as.data.frame(round(i2_ml(spp_mod),digits = 2))
 mod_bias <- readRDS("~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mod_bias.rds")
 mod_bias_b <- as.data.frame(mod_bias$b)
@@ -67,7 +67,7 @@ mod_bias_ub <-as.data.frame(mod_bias$ci.ub)
 mod_bias_pvalue <- as.data.frame(mod_bias$pval)
 ```
 *(b)	Meta-analysis of early thermal effects on thermal physiology in reptiles*
-<p>Across reptiles, developmental temperatures did not influence thermal traits (T$_{pref}$ or CT$_{max}$), but heterogeneity was high (ARR =`r I2_all_predict[5,1]`-, 95% CI:`r I2_all_predict[1,3]`-`r I2_all_predict[1,4]` ; $I^2_{Total}$ = `r I2_all[1,1]`%, Prediction Interval:`r I2_all_predict[1,5]`-`r I2_all_predict[1,6]`; Fig. 2A, n = 69 effects from 13 species).Thermal traits were not influenced by life stage or latitude (Fig. 2B|C). When analysing each reptilian taxonomic group separately, there was no variation in thermal traits for lizards, tortoises, tuataras, and turtles. However, there was a significant increase in thermal traits in snakes (Fig 2D). Species effects ($I^2_{Species}$ = `r I2_spp[1,1]`%)) drive most of the heterogeneity, with two species Chelydra serpentina and Nerodia sipedon exhibiting significant thermal physiological responses to incubation temperatures (Fig. S2). Under higher developmental temperatures, thermal traits in *Chelydra serpentina* decline by 7% while thermal traits in *Nerodia sipedon* increase by 20%. We found no evidence for publication biases ($\beta$=`r mod_bias_b[2,1]`, 95%CI=`r mod_bias_lb[2,1]`-`r mod_bias_ub[2,1]`, *p=`r mod_bias_pvalue[2,1]`*; Fig S3; *for details see electronic supplementary materials*).
+<p>Across reptiles, developmental temperatures did not influence thermal traits (T$_{pref}$ or CT$_{max}$), but heterogeneity was high (ARR =`r I2_all_predict[1,1]`-, 95% CI:`r I2_all_predict[1,3]`-`r I2_all_predict[1,4]` ; $I^2_{Total}$ = `r I2_all[1,1]`%, Prediction Interval:`r I2_all_predict[1,5]`-`r I2_all_predict[1,6]`; Fig. 2A, n = 69 effects from 13 species).Thermal traits were not influenced by life stage or climatic zone  (Fig. 2B|C). When analysing each reptilian taxonomic group separately, there was no variation in thermal traits for lizards, tortoises, tuataras, and turtles. However, there was a significant increase in thermal traits in snakes (Fig 2D). Species effects ($I^2_{Species}$ = `r I2_spp[3,1]`%)) drive most of the heterogeneity, with two species Chelydra serpentina and Nerodia sipedon exhibiting significant thermal physiological responses to incubation temperatures (Fig. S2). Under higher developmental temperatures, thermal traits in *Chelydra serpentina* decline by 7% while thermal traits in *Nerodia sipedon* increase by 20%. We found no evidence for publication biases ($\beta$=`r mod_bias_b[2,1]`, 95%CI=`r mod_bias_lb[2,1]`-`r mod_bias_ub[2,1]`, *p=`r mod_bias_pvalue[2,1]`*; Fig S3; *for details see electronic supplementary materials*).
 <p>
 
 \newpage
@@ -76,67 +76,37 @@ Table 1. Model outputs coefficients for testing wither sex, body mass, incubatio
 ```{r Table1,echo= FALSE}
 ################ Tpref
 # Tabulate the model coefficients
-#null mod
-Tpref_m1_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m1.rds") %>% 
-  tidy(conf.int = TRUE)
-# M2 = sex
-Tpref_m2_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m2.rds") %>%
-  tidy(conf.int = TRUE) %>% 
-  filter(term == "sexm") 
-Tpref_m2_table[1,1] <- "Sex"
-# M3 = body mass
-Tpref_m3_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m3.rds") %>% 
-  tidy(conf.int = TRUE)%>% 
-  filter(term == "scale(body_size)") 
-Tpref_m3_table[1,1] <- "Body Mass"
-# M4 = Incubation Temperature
-Tpref_m4_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m4.rds") %>% 
-  tidy(conf.int = TRUE)%>%
-  filter(term == "temp28") 
-Tpref_m4_table[1,1] <- "Incubation Temperature"
-# M5 = Resource
+# M5 accounts for all main effects but interaction (M6 - which is NS)
 Tpref_m5_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m5.rds") %>%
-  tidy(conf.int = TRUE) %>% 
-  filter(term == "treatC") 
-Tpref_m5_table[1,1] <- "Resource"
-# M6 = Resource*Temp interaction
+  tidy(conf.int = TRUE) 
+Tpref_m5_table[2,1] <- "Body Mass"
+Tpref_m5_table[3,1] <- "Sex"
+Tpref_m5_table[4,1] <- "Incubation Temperature"
+Tpref_m5_table[5,1] <- "Resource"
+
+# M6 = Resource*Temp interaction (M6)
 Tpref_m6_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Tpref_models/Tpref.m6.rds") %>% 
   tidy(conf.int=TRUE) %>% 
   filter(term == "temp28:treatC") 
 Tpref_m6_table[1,1] <- "Incubation Temperature*Resource"
 
 # arranging Tpref Table
-Tpref.Tbl.comb <- rbind(Tpref_m1_table, Tpref_m2_table, Tpref_m3_table, 
-               Tpref_m4_table, Tpref_m5_table, Tpref_m6_table) %>% 
+Tpref.Tbl.comb <- rbind(Tpref_m5_table, Tpref_m6_table) %>% 
   dplyr::select(-c("std.error","statistic")) %>% 
   mutate("Thermal Index" = "Tpref")
 Tpref.Tbl.1 <- Tpref.Tbl.comb[,c(6,1,2,4,5,3)]
 
 ################ CT MAX
 # Tabulate the model coefficients 
-#null mod
-CTmax_m1_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m1.rds") %>% 
-  tidy(conf.int = TRUE)
-# M2 = sex
-CTmax_m2_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m2.rds") %>% 
-  tidy(conf.int = TRUE) %>% 
-  filter(term == "sexm") 
-CTmax_m2_table[1,1] <- "Sex"
-# M3 = body mass
-CTmax_m3_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m3.rds") %>%
-  tidy(conf.int = TRUE) %>% 
-  filter(term == "scale(mass)") 
-CTmax_m3_table[1,1] <- "Body Mass"
-# M4 = Incubation Temperature
-CTmax_m4_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m4.rds") %>%
-  tidy(conf.int = TRUE) %>% 
-  filter(term == "temp28") 
-CTmax_m4_table[1,1] <- "Incubation Temperature"
+# M5 accounts for all main effects but interaction (M6 - which is NS)
 # m5 = Resource
 CTmax_m5_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m5.rds") %>% 
-  tidy(conf.int = TRUE) %>% 
-  filter(term == "treatC") 
-CTmax_m5_table[1,1] <- "Resource"
+  tidy(conf.int = TRUE) 
+CTmax_m5_table[2,1] <- "Body Mass"
+CTmax_m5_table[3,1] <- "Sex"
+CTmax_m5_table[4,1] <- "Incubation Temperature"
+CTmax_m5_table[5,1] <- "Resource"
+
 # m6 = Resource*Temp interaction
 CTmax_m6_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_models/CT.Max.m6.rds") %>%
   tidy(conf.int = TRUE) %>% 
@@ -144,8 +114,7 @@ CTmax_m6_table <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/CTmax_mo
 CTmax_m6_table[1,1] <- "Incubation Temperature*Resource"
 
 # arranging CTmax Table
-CTmax.Tbl.comb <- rbind(CTmax_m1_table, CTmax_m2_table, CTmax_m3_table, 
-               CTmax_m4_table, CTmax_m5_table, CTmax_m6_table) %>% 
+CTmax.Tbl.comb <- rbind(CTmax_m5_table, CTmax_m6_table) %>% 
   dplyr::select(-c("std.error","statistic")) %>% 
   mutate("Thermal Index" = "CTmax")
 CTmax.Tbl.1 <- CTmax.Tbl.comb[,c(6,1,2,4,5,3)]
@@ -183,27 +152,201 @@ Figure 1. Thermal indices across different incubation temperatures and resource 
 # Figure 2 - - code for figure can be found in meta-analysis.R script s
 knitr::include_graphics("~/Dropbox/Lampro_project/Final.Figures/Figure2.pdf")
 ```
-Figure 2. Magnitude of the effect on developmental temperature on thermal indices (T$_{pref}$ & CT$_{max}$) in reptiles (A) with respect to age class (B), latitude (C), and taxon (D). Mean meta-analytic estimates (circles) with their 95% confidence intervals (thicker error bars) and prediction intervals (thinner error bars). Individual data points (colored circles) from each study from meta-analysis are scaled by precision (inverse of standard error) and k is the number of effect sizes with number of species in brackets. ARR is acclimation response ratio. Graphs were constructed using the orchaRd package (Nakagawa et al., 2021; version 2.0).
+Figure 2. Magnitude of the effect on developmental temperature on thermal indices (T$_{pref}$ & CT$_{max}$) in reptiles (A) with respect to age class (B), climatic zone  (C), and taxon (D). Mean meta-analytic estimates (circles) with their 95% confidence intervals (thicker error bars) and prediction intervals (thinner error bars). Individual data points (colored circles) from each study from meta-analysis are scaled by precision (inverse of standard error) and k is the number of effect sizes with number of species in brackets. ARR is acclimation response ratio. Graphs were constructed using the orchaRd package (Nakagawa et al., 2021; version 2.0).
 
 \newpage
 # Supplementary Tables 
-\newpage
 ```{r FigS1,echo= FALSE}
 # figure of lizard in tube
 knitr::include_graphics("~/Dropbox/Lampro_project/Final.Figures/FigureS1.pdf")
 ```
-Figure S1.XXXXXXXXXXXXXXXXXX
+Figure S1.Methods for collecting Tpref in Lampropholis delicata. Lizards were placed in Falcon tubes in a temperature-controlled bath. To obtain the most accurate Tb for skinks, temperature was monitored with a thermocouple probe secured within Falcon tube and an additional thermal couple that was placed in the bath. Water temperature was increased to 38◦C at a rate of 1◦C/min intervals. Every 1min tubes were rotated to check righting reflex of skinks. CTmax was defined as the temperature at which an individual lost their righting reflex.
 
 \newpage
 ```{r FigS2,echo= FALSE}
-# Figure S2 - code for figure can be found in meta-analysis.R script
+# figure of Decision tree
 knitr::include_graphics("~/Dropbox/Lampro_project/Final.Figures/FigureS2.pdf")
 ```
-Figure S2. Magnitude of the effect on developmental temperature on thermal indices (T$_{pref}$ & CT$_{max}$) in species. ARR is acclimation response ratio. Mean meta-analytic estimates (circles) with their 95% confidence intervals (thicker error bars) and prediction intervals (thinner error bars). Individual data points (colored circles) from each study from meta-analysis are scaled by precision (inverse of standard error) and k is the number of effect sizes with number of species in brackets. Graphs were constructed using the orchaRd package (Nakagawa et al., 2021; version 2.0).
+Figure S2. Figure S2. Decision tree showing the eligibility criteria used to assess full-text articles. 
 
 \newpage
 ```{r FigS3,echo= FALSE}
-# Figure S3 - code for figure can be found in meta-analysis.R script
+# PRISMA statemen
 knitr::include_graphics("~/Dropbox/Lampro_project/Final.Figures/FigureS3.pdf")
 ```
-Figure S3. Funnel plot of the meta-analytic residuals against precision (1/SE). Each point represents a pair-wise temperature comparison. There is no visually detectable asymmetry.
+Figure S3. PRISMA statement illustrating the systematic literature search and record screening process.
+
+\newpage
+```{r FigS4,echo= FALSE}
+# Figure S4 - code for figure can be found in meta-analysis.R script
+knitr::include_graphics("~/Dropbox/Lampro_project/Final.Figures/FigureS4.pdf")
+```
+Figure S4. Funnel plot of the meta-analytic residuals against precision (1/SE). Each point represents a pair-wise temperature comparison. There is no visually detectable asymmetry.
+
+\newpage
+Table S3. The magnitude of the effect of developmental temperature on ARR on CTmax and Tpref of reptiles. The number of effect sizes is denoted by k  and n indicates the number of species. Estimates are species mean meta-analytic estimates with their 95% confidence intervals (lowerCL = lower bound & upperCL = upper bound) and prediction intervals (lowerPR = lower bound & upperPR = upper bound). P values indicate if values are significantly different from zero. The conditional r$^{2}$ (0.79) and the marginal r$^{2}$ (0.01). 
+```{r TableS3,echo= FALSE}
+###### Trait
+data <- readRDS(file = "~/Dropbox/Lampro_project/Final.Analysis.Data/Meta_df_rmdfile.rds")
+model_trait <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.trait.rds") 
+trait_tbl <- mod_results(model_trait, mod="trait", group="study_ID",  data=data)
+trait_tbl <- trait_tbl$mod_table
+trait_tbl<- trait_tbl %>% mutate("p value" = "", 
+                                 "k" = "",
+                                 "n" = "")
+# add pvalues
+trait_tbl[1,7] <- round(0.8443, digits = 2)
+trait_tbl[2,7] <- round(0.5801, digits = 2)
+# adding k
+trait_tbl[1,8] <- 21
+trait_tbl[2,8] <- 61
+# adding sample size
+trait_tbl[1,9] <- 6
+trait_tbl[2,9] <- 15
+
+# marginal and conditional r2
+model_trait_r2 <- round(r2_ml(model_trait), digits = 2)
+
+############# Final Table S3
+Tbl.S3 <- trait_tbl %>% 
+  rename("Thermal metric" = name,
+         Estimate = estimate) %>% 
+  mutate_if(is.numeric, round, 2)
+Tbl.S3 <-  Tbl.S3[,c(1,8,9,2,4,5,6,7)]
+Tbl.S3.Final <- flextable(Tbl.S3) %>% 
+  italic(i = 1:2, j = 1, italic = TRUE) %>%  
+  autofit(part = "all") %>% 
+  align(align ="center", part = "all") %>% 
+  font(part = "all", fontname = "Times New Roman") %>% 
+  fix_border_issues() 
+knitr::knit_print(Tbl.S3.Final)
+```
+
+\newpage
+Table S4. The magnitude of the effect of developmental temperature on ARR when accounting for age class. The number of effect sizes is denoted by k and n indicates the number of species. Estimates are species mean meta-analytic estimates with their 95% confidence intervals (lowerCL = lower bound & upperCL = upper bound) and prediction intervals (lowerPR = lower bound & upperPR = upper bound). P values indicate if values are significantly different from zero. The conditional r$^{2}$ (0.80) and the marginal r$^{2}$ (0.01).
+```{r TableS4,echo= FALSE}
+###### Trait
+data <- readRDS(file = "~/Dropbox/Lampro_project/Final.Analysis.Data/Meta_df_rmdfile.rds")
+data$age <- factor(data$age, levels=c("adult", "juvenile", "hatchling"))
+model_age <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.age.rds") 
+age_tbl <- mod_results(model_age, mod="age", group="study_ID",  data=data)
+age_tbl <- age_tbl$mod_table
+age_tbl<- age_tbl %>% mutate("p value" = "", 
+                                 "k" = "",
+                                 "n" = "")
+# add pvalues
+age_tbl[1,7] <- round(0.9823, digits = 2)
+age_tbl[2,7] <- round(0.9741, digits = 2)
+age_tbl[3,7] <-round(0.7236, digits = 2)
+# adding k
+age_tbl[1,8] <- 10
+age_tbl[2,8] <- 28
+age_tbl[3,8] <- 23
+
+# adding sample size
+age_tbl[1,9] <- 3
+age_tbl[2,9] <- 6
+age_tbl[3,9] <- 8
+
+# marginal and conditional r2
+model_age_r2 <- round(r2_ml(model_age), digits = 2)
+
+############# Final Table S3
+Tbl.S4 <- age_tbl %>% 
+  rename("Age class" = name,
+         Estimate = estimate) %>% 
+  mutate_if(is.numeric, round, 2)
+Tbl.S4 <-  Tbl.S4[,c(1,8,9,2,4,5,6,7)]
+Tbl.S4.Final <- flextable(Tbl.S4) %>% 
+  italic(i = 1:3, j = 1, italic = TRUE) %>%  
+  autofit(part = "all") %>% 
+  align(align ="center", part = "all") %>% 
+  font(part = "all", fontname = "Times New Roman") %>% 
+  fix_border_issues() 
+knitr::knit_print(Tbl.S4.Final)
+```
+
+\newpage
+Table S5. The magnitude of the effect of developmental temperature on ARR when accounting for the species origin. The number of effect sizes is denoted by k  and n indicates the number of species. Estimates are species mean meta-analytic estimates with their 95% confidence intervals (lowerCL = lower bound & upperCL = upper bound) and prediction intervals (lowerPR = lower bound & upperPR = upper bound). P values indicate if values are significantly different from zero. The conditional r$^{2}$ (0.80) and the marginal r$^{2}$ (0.01).
+```{r TableS5,echo= FALSE}
+###### Geographic zone
+data <- readRDS(file = "~/Dropbox/Lampro_project/Final.Analysis.Data/Meta_df_rmdfile.rds")
+model_geo <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.zone.rds") 
+geo_tbl <- mod_results(model_geo, mod="zone", group="study_ID",  data=data)
+geo_tbl <- geo_tbl$mod_table
+geo_tbl<- geo_tbl %>% mutate("p value" = "", 
+                                 "k" = "",
+                                 "n" = "")
+# add pvalues
+geo_tbl[1,7] <- round(0.7416, digits = 2)
+geo_tbl[2,7] <- round(0.9447, digits = 2)
+# adding k
+geo_tbl[1,8] <- 55
+geo_tbl[2,8] <- 6
+
+# adding sample size
+geo_tbl[1,9] <- 14
+geo_tbl[2,9] <- 1
+
+# marginal and conditional r2
+model_geo_r2 <- round(r2_ml(model_geo), digits = 2)
+
+############# Final Table S3
+Tbl.S5 <- geo_tbl %>% 
+  rename("Geographic zone" = name,
+         Estimate = estimate) %>% 
+  mutate_if(is.numeric, round, 2)
+Tbl.S5 <-  Tbl.S5[,c(1,8,9,2,4,5,6,7)]
+Tbl.S5.Final <- flextable(Tbl.S5) %>% 
+  italic(i = 1:2, j = 1, italic = TRUE) %>%  
+  autofit(part = "all") %>% 
+  align(align ="center", part = "all") %>% 
+  font(part = "all", fontname = "Times New Roman") %>% 
+  fix_border_issues() 
+knitr::knit_print(Tbl.S5.Final)
+```
+
+\newpage
+Table S6. The magnitude of the effect of developmental temperature on ARR when accounting for reptile taxa. The number of effect sizes is denoted by k and n indicates the number of species. Estimates are species mean meta-analytic estimates with their 95% confidence intervals (lowerCL = lower bound & upperCL = upper bound) and prediction intervals (lowerPR = lower bound & upperPR = upper bound). P values indicate if values are significantly different from zero. The conditional r$^{2}$ (0.80) and the marginal r$^{2}$ (0.38).
+```{r TableS6,echo= FALSE}
+###### Trait
+data <- readRDS(file = "~/Dropbox/Lampro_project/Final.Analysis.Data/Meta_df_rmdfile.rds")
+model_taxa <- readRDS(file = "~/Dropbox/Lampro_project/Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.taxon.rds") 
+taxa_tbl <- mod_results(model_taxa, mod="class", group="study_ID",  data=data)
+taxa_tbl <- taxa_tbl$mod_table
+taxa_tbl<- taxa_tbl %>% mutate("p value" = "", 
+                                 "k" = "",
+                                 "n" = "")
+# add pvalues
+taxa_tbl[1,7] <- round(0.3720, digits = 2)
+taxa_tbl[2,7] <- round(0.0110, digits = 2)
+taxa_tbl[3,7] <-round(0.6348, digits = 2)
+taxa_tbl[4,7] <-round(0.4377, digits = 2)
+# adding k
+taxa_tbl[1,8] <- 41
+taxa_tbl[2,8] <- 7
+taxa_tbl[3,8] <- 2
+taxa_tbl[4,8] <- 11
+
+# adding sample size
+taxa_tbl[1,9] <- 10
+taxa_tbl[2,9] <- 2
+taxa_tbl[3,9] <- 1
+taxa_tbl[4,9] <- 2
+
+# marginal and conditional r2
+model_taxa_r2 <- round(r2_ml(model_taxa), digits = 2)
+
+############# Final Table S3
+Tbl.S6 <- taxa_tbl %>% 
+  rename("Taxa" = name,
+         Estimate = estimate) %>% 
+  mutate_if(is.numeric, round, 2)
+Tbl.S6 <-  Tbl.S6[,c(1,8,9,2,4,5,6,7)]
+Tbl.S6.Final <- flextable(Tbl.S6) %>% 
+  italic(i = 1:4, j = 1, italic = TRUE) %>%  
+  autofit(part = "all") %>% 
+  align(align ="center", part = "all") %>% 
+  font(part = "all", fontname = "Times New Roman") %>% 
+  fix_border_issues() 
+knitr::knit_print(Tbl.S6.Final)

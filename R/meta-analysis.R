@@ -52,7 +52,9 @@ phylo_matrix<-vcv(phylo_tree, cor=T) # generate phylogenetic vcv matrix
 names(data)<-make.names(names(data))
 data<-as.data.frame(data)
 VCV_ARR <- metaAidR::make_VCV_matrix(data, V = "Var_ARR", cluster = "shared_trt_ID", obs = "obs_ID")
-  
+
+## save final "data" df for rmd results  
+data_final <- saveRDS(data, "./Final.Analysis.Data/Meta_df_rmdfile.rds")
 
 ###################################################  
 ##### Phylo, spp, observation - intercept mods
