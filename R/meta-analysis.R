@@ -115,6 +115,7 @@ model_all_rand_spp<-rma.mv(ARR~1,
 summary(model_all_rand_spp)     
 i2_ml(model_all_rand_spp) 
 AIC.rma(model_all_rand_spp)
+I2_model_all_rand_spp_predict <- as.data.frame(predict(model_all_rand_spp))
 
 #############################################
 # Fig2A) Intercept model: **without phylogeny
