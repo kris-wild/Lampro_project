@@ -81,7 +81,7 @@ I2_all_phylo
 I2_all_phylo_predict <- as.data.frame(predict(model_all_rand))
 I2_all_phylo_predict
 AIC.rma(model_all_rand)
-saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.allrand.rds")
+saveRDS(model_all_rand, "./Final.Models/Meta_analysis_models/meta.acc.phylo.allrand.rds")
 
 # 2) model removing species name as random variable but keeping phylo matrix
 model_all_no_spp<-rma.mv(ARR~1, 
@@ -100,7 +100,7 @@ I2_all_phylo <- as.data.frame(round(i2_ml(model_all_no_spp),digits = 2))
 I2_all_phylo_predict <- as.data.frame(predict(model_all_no_spp))
 I2_all_phylo_predict
 AIC.rma(model_all_no_spp)
-saveRDS(model_all_no_spp, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.phylo.nospp.rds")
+saveRDS(model_all_no_spp, "./Final.Models/Meta_analysis_models/meta.acc.phylo.nospp.rds")
 
 # 3) Drop phylogeny and just check if species is important. Basically the same so keep species in.
 model_all_rand_spp<-rma.mv(ARR~1, 
@@ -131,7 +131,7 @@ int_model<-rma.mv(ARR~1,
                   data=data)
 
 
-saveRDS(int_model, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.no.phylo.rds")
+saveRDS(int_model, "./Final.Models/Meta_analysis_models/meta.acc.no.phylo.rds")
 # model checks Intercept model
 summary(int_model)     
 i2_ml(int_model) # Lots of heterogeneity
@@ -154,7 +154,7 @@ model_trait<- rma.mv(ARR~trait-1,
 ## Lets use RVE to account for non-independence
 model_trait_RVE <- robust(model_trait, cluster = data$cluster)
 
-saveRDS(model_trait, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.trait.rds")
+saveRDS(model_trait, "./Final.Models/Meta_analysis_models/meta.acc.trait.rds")
 summary(model_trait)
 orchard_plot(model_trait, group = "study_ID", mod="trait", xlab="ARR", data = data)
 i2_ml(model_trait)
@@ -176,7 +176,7 @@ model_age<- rma.mv(ARR~age-1,
                                ~1|obs_ID),
                    data=data)
 
-saveRDS(model_age, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.age.rds")
+saveRDS(model_age, "./Final.Models/Meta_analysis_models/meta.acc.age.rds")
 summary(model_age)
 Lifestage_plot <- orchard_plot(model_age, group = "study_ID", mod="age", xlab="ARR", data = data, legend.pos = "none", trunk.size=6) + 
   scale_fill_manual(values = c("deepskyblue2","firebrick", "darkgoldenrod1"))+ 
@@ -201,7 +201,7 @@ model_zone<- rma.mv(ARR~zone-1,
                                 ~1|obs_ID),
                     data=data)
 
-saveRDS(model_zone, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.zone.rds")
+saveRDS(model_zone, "./Final.Models/Meta_analysis_models/meta.acc.zone.rds")
 summary(model_zone)
 LatLong_plot <-orchard_plot(model_zone, group = "study_ID", mod="zone", xlab="ARR", data = data, legend.pos = "none", trunk.size=6) +
   scale_fill_manual(values = c("deepskyblue2","firebrick"))+ 
@@ -225,7 +225,7 @@ model_taxon<- rma.mv(ARR~class-1,
                                  ~1|obs_ID),
                      data=data)
 
-saveRDS(model_taxon, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/meta.acc.taxon.rds")
+saveRDS(model_taxon, "./Final.Models/Meta_analysis_models/meta.acc.taxon.rds")
 summary(model_taxon)
 mod_results(model_taxon, mod="class", group="study_ID", data=data) # Prediction intervals
 
@@ -291,7 +291,7 @@ summary(model.bias2)
 
 # Funnel plot
 funnel( yaxis="seinv", model.bias1, legend=FALSE, digit = 2, las = 1)
-saveRDS(model.bias1, "./Final.Models/Meta_analysis_models/Meta_mods_accl_ratio/mod_bias.rds")
+saveRDS(model.bias1, "./Final.Models/Meta_analysis_models/mod_bias.rds")
 
 
 
