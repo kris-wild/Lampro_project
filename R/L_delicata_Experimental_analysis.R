@@ -16,7 +16,9 @@ CT.data.raw <- read.csv("./Final.Analysis.Data/CTmax_datasheet_2020.csv") %>%
          year = "2020",
          spp = "delicata")
 
-
+## Summary of mass data
+  CT.data.raw  %>% group_by(trt)  %>% summarise(mean = mean(mass), sd = sd(mass))
+  
 ####################
 # Model 1 
 ####################
