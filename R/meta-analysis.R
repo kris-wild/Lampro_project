@@ -26,7 +26,6 @@ data <- data %>%  mutate(ARR = ((trt_mean-c_mean)/(trt_temp-c_temp)), # Calculat
                    
                    precision =(1/sqrt(Var_ARR))) # Calculate precision (1/SE)
 
-
 # acclimation response ratio figure
 ggplot(data) + 
   geom_vline(xintercept=0, alpha=0.5, linetype=2)+
@@ -55,6 +54,17 @@ VCV_ARR <- metaAidR::make_VCV_matrix(data, V = "Var_ARR", cluster = "shared_trt_
 
 ## save final "data" df for rmd results  
 data_final <- saveRDS(data, "./Final.Analysis.Data/Meta_df_rmdfile.rds")
+
+# Check N in study
+  n_dat <- data  %>% group_by(study_ID, genus_species, trait)  %>% summarise(n_trt = mean(trt_n), n_c = mean(c_n))  
+
+  n_dat  <-  n_dat  %>%  mutate(total_n = n_trt + n_c)
+
+# Total N across studies. Useful for power
+  sum(n_dat$total_n)
+
+#What is mean N for traits across studies?
+  n_dat  %>% group_by(trait)  %>% summarise(n_trt = mean(n_trt), n_c = mean(n_c))  %>%  mutate(n = mean(c(n_trt, n_c)))
 
 ###################################################  
 ##### Phylo, spp, observation - intercept mods
