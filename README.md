@@ -1,5 +1,11 @@
 # Thermal developmental environments do not affect thermal physiology: An experimental test and meta-analysis in reptiles
 
+# Citation
+
+This paper is now published and can be cited as follows:
+
+Zhang RY, Wild KH, Pottier P, MI Carrasco, Nakagawa S, Noble DWA. 2023. Developmental environments do not affect thermal physiological traits in reptiles: an experimental test and meta-analysis. Biol. Lett. 20230019. https://doi.org/10.1098/rsbl.2023.0019
+
 # Data files
 All raw data used for scripts can be found in folder "Final.Analysis.Data".In this folder you will find raw data used for analysis,script, and figures for CTmax "CTmax_datasheet_2020.csv"; Tpref "Tpref_datasheet_2020.csv" and meta analysis "Final_Meta_results_extracted_data.csv". The descriptions for each column heading for raw data can be found in the csv file Data_file_column_names.csv.  Finally, in this folder is an rds file "Meta_df_rmdfile.rds" which is the meta-analysis extracted data that was used in the results .rmd file.
 
